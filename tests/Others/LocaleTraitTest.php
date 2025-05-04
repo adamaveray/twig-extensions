@@ -37,6 +37,15 @@ final class LocaleTraitTest extends TestCase
       'context' => ['app' => $app],
     ];
 
+    yield 'Context Symfony app fallback to locale' => [
+      'expectedLocale' => 'zz_ZZ',
+      'translatorOrLocale' => null,
+      'context' => [
+        'app' => new SymfonyAppVariable(),
+        'locale' => 'zz_ZZ',
+      ],
+    ];
+
     yield 'Context locale' => [
       'expectedLocale' => 'zz_ZZ',
       'translatorOrLocale' => null,

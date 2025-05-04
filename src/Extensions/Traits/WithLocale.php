@@ -29,7 +29,11 @@ trait WithLocale
   {
     $app = self::getAppVariableFromContext($context);
     if ($app !== null) {
-      return $app->getLocale();
+      try {
+        return $app->getLocale();
+      } catch (\RuntimeException) {
+        // App locale unavailable - try other sources
+      }
     }
 
     /** @psalm-suppress MixedAssignment */
