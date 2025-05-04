@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions;
 
-use Averay\TwigExtensions\Bundles\AbstractBundle;
 use Psr\Container\ContainerInterface;
 use Twig\Cache\CacheInterface;
 use Twig\Extension\ExtensionInterface;
@@ -82,20 +81,6 @@ class TwigEnvironment extends \Twig\Environment
     foreach ($extensions as $extension) {
       $this->addExtension($extension);
     }
-  }
-
-  #[\Override]
-  public function addExtension(ExtensionInterface $extension): void
-  {
-    if ($extension instanceof AbstractBundle) {
-      // Unwrap extension set
-      foreach ($extension->getExtensions() as $innerExtension) {
-        $this->addExtension($innerExtension);
-      }
-      return;
-    }
-
-    parent::addExtension($extension);
   }
 
   /**
