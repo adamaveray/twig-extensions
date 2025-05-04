@@ -36,6 +36,6 @@ final class SymfonyBundle extends AbstractBundle
     if ($this->appVariable !== null) {
       $globals['app'] = $this->appVariable;
     }
-    return $globals;
+    return $globals + parent::getGlobals();
   }
 }
