@@ -73,12 +73,21 @@ abstract class AbstractBundle implements
 
   /**
    * @psalm-suppress UnusedPsalmSuppress It is actually used...
-   * @psalm-suppress LessSpecificReturnStatement,MoreSpecificReturnType Library type definitions are too complex and have incorrect class references.
+   * @psalm-suppress LessSpecificReturnStatement,MoreSpecificReturnType,MixedReturnTypeCoercion Library type definitions are too complex and have incorrect class references.
    */
   #[\Override]
   public function getOperators(): array
   {
-    return $this->loadAll('getOperators');
+    /** @var list<array<string, mixed>> $unarySets */
+    $unarySets = [];
+    /** @var list<array<string, mixed>> $binarySets */
+    $binarySets = [];
+    foreach ($this->getExtensions() as $extension) {
+      [$unary, $binary] = $extension->getOperators();
+      $unarySets[] = $unary;
+      $binarySets[] = $binary;
+    }
+    return [\array_merge(...$unarySets), \array_merge(...$binarySets)];
   }
 
   /**

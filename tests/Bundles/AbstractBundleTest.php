@@ -43,7 +43,6 @@ final class AbstractBundleTest extends TestCase
     yield 'Filters' => ['method' => 'getFilters'];
     yield 'Tests' => ['method' => 'getTests'];
     yield 'Functions' => ['method' => 'getFunctions'];
-    yield 'Operators' => ['method' => 'getOperators'];
   }
 
   public function testExtensions(): void
@@ -55,6 +54,53 @@ final class AbstractBundleTest extends TestCase
     ];
     $bundle = self::createBundle($nestedExtensions);
     self::assertSame($nestedExtensions, $bundle->getExtensions(), 'The extensions should be combined.');
+  }
+
+  public function testOperators(): void
+  {
+    $createStub = static function (array $operators): ExtensionInterface {
+      $extension = self::createStub(ExtensionInterface::class);
+      $extension->method('getOperators')->willReturn($operators);
+      return $extension;
+    };
+
+    $bundle = self::createBundle([
+      $createStub([
+        [
+          'test-unary-one' => [123],
+          'test-unary-two' => [456],
+        ],
+        [
+          'test-binary-one' => [789],
+          'test-binary-two' => [987],
+        ],
+      ]),
+      $createStub([
+        [
+          'test-unary-three' => [654],
+        ],
+        [
+          'test-binary-three' => [321],
+        ],
+      ]),
+    ]);
+
+    self::assertEquals(
+      [
+        [
+          'test-unary-one' => [123],
+          'test-unary-two' => [456],
+          'test-unary-three' => [654],
+        ],
+        [
+          'test-binary-one' => [789],
+          'test-binary-two' => [987],
+          'test-binary-three' => [321],
+        ],
+      ],
+      $bundle->getOperators(),
+      'The operators should be combined.',
+    );
   }
 
   public function testGlobals(): void

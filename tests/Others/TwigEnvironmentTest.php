@@ -167,17 +167,25 @@ final class TwigEnvironmentTest extends TestCase
       'tests' => [new TwigTest('test-one'), new TwigTest('test-two')],
       'functions' => [new TwigFunction('function-one'), new TwigFunction('function-two')],
       'operators' => [
-        // One
         [
-          'test-first' => [
+          'test-unary-one' => [
             'precedence' => 1,
             'class' => 'test-one',
           ],
+          'test-unary-two' => [
+            'precedence' => 1,
+            'class' => 'test-two',
+          ],
         ],
         [
-          'test-last' => [
+          'test-binary-one' => [
             'precedence' => 2,
-            'class' => 'test-two',
+            'class' => 'test-three',
+            'associativity' => 1,
+          ],
+          'test-binary-two' => [
+            'precedence' => 3,
+            'class' => 'test-four',
             'associativity' => 1,
           ],
         ],
@@ -211,13 +219,11 @@ final class TwigEnvironmentTest extends TestCase
       );
     }
 
-    $expectedOperatorNames = \array_map(
-      static fn(array $operators): string => \array_keys($operators)[0],
-      $valueSets['operators'],
-    );
+    $expectedUnaryOperatorNames = \array_keys($valueSets['operators'][0]);
+    $expectedBinaryOperatorNames = \array_keys($valueSets['operators'][1]);
     $expressionParsers = \iterator_to_array($environment->getExpressionParsers()->getIterator());
     self::assertContainsAll(
-      $expectedOperatorNames,
+      \array_merge($expectedUnaryOperatorNames, $expectedBinaryOperatorNames),
       \array_keys($expressionParsers),
       'The bundled extension operators should be processed.',
     );
