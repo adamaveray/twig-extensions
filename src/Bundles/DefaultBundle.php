@@ -20,6 +20,7 @@ final class DefaultBundle extends AbstractBundle
       new CacheExtension(),
 
       // Custom
+      new Extensions\ArraysExtension(),
       new Extensions\AssertionsExtension(),
       new Extensions\CssExtension(),
       new Extensions\DatesExtension(),
@@ -27,6 +28,7 @@ final class DefaultBundle extends AbstractBundle
       new Extensions\LogicExtension(),
       new Extensions\StringsExtension($this->translator),
       new Extensions\UrlsExtension(),
+      new Extensions\ValuesExtension(),
     ];
   }
 
