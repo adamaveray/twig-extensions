@@ -15,6 +15,7 @@ final class DevelopmentExtension extends AbstractBundle
     ?Stopwatch $stopwatch,
     ?Profile $profile = null,
     ?TemplateDumperInterface $templateDumper = null,
+    ?Stopwatch $profileStopwatch = null,
   ) {
     $this->extensions = [
       new Extensions\DumpExtension($templateDumper),
@@ -23,7 +24,7 @@ final class DevelopmentExtension extends AbstractBundle
     ];
 
     if ($profile !== null) {
-      $this->extensions[] = new SymfonyExtensions\ProfilerExtension($profile, $stopwatch);
+      $this->extensions[] = new SymfonyExtensions\ProfilerExtension($profile, $profileStopwatch);
     }
   }
 }

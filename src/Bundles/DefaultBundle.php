@@ -40,8 +40,9 @@ final class DefaultBundle extends AbstractBundle
     ?Stopwatch $stopwatch,
     ?Profile $profile = null,
     ?TemplateDumperInterface $templateDumper = null,
+    ?Stopwatch $profileStopwatch = null,
   ): static {
-    $this->extensions[] = new DevelopmentExtension($stopwatch, $profile, $templateDumper);
+    $this->extensions[] = new DevelopmentExtension($stopwatch, $profile, $templateDumper, $profileStopwatch);
     return $this;
   }
 
