@@ -68,6 +68,7 @@ final class AbstractBundleTest extends TestCase
     $bundle = self::createBundle([
       $createStub(globals: ['hello' => 'world', 'foo' => 'bar']),
       $createStub(globals: ['baz' => 'qux']),
+      self::createStub(ExtensionInterface::class),
     ]);
 
     self::assertEquals(

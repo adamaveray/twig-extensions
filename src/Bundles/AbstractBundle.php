@@ -87,8 +87,15 @@ abstract class AbstractBundle implements
   #[\Override]
   public function getGlobals(): array
   {
-    /** @var array<string, mixed> */
-    return $this->loadAll('getGlobals');
+    /** @var list<array<string, mixed>> $globals */
+    $sets = [];
+    foreach ($this->getExtensions() as $extension) {
+      if ($extension instanceof GlobalsInterface) {
+        /** @var array<string, mixed> */
+        $sets[] = $extension->getGlobals();
+      }
+    }
+    return \array_merge(...$sets);
   }
 
   #[\Override]
