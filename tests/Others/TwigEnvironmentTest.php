@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
+use Twig\Extension\GlobalsInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -63,20 +64,7 @@ final class TwigEnvironmentTest extends TestCase
 
     $environment->addExtensions($extensions);
 
-    $bundle = $this->getMockBuilder(AbstractBundle::class)->getMock();
-    $bundleExtensions = [
-      $builder->setMockClassName('MockBundledExtensionOne')->getMock(),
-      $builder->setMockClassName('MockBundledExtensionTwo')->getMock(),
-    ];
-    $bundle->expects($this->once())->method('getExtensions')->willReturn($bundleExtensions);
-    $environment->addExtension($bundle);
-
     self::assertContainsAll($extensions, $environment->getExtensions(), 'The extensions should be stored.');
-    self::assertContainsAll(
-      $bundleExtensions,
-      $environment->getExtensions(),
-      'The bundled extensions should be stored.',
-    );
   }
 
   public function testTokenParsers(): void
@@ -160,6 +148,79 @@ final class TwigEnvironmentTest extends TestCase
     $environment = new TwigEnvironment(new ArrayLoader([]), ['container' => $container]);
     $loadedService = $environment->getRuntime($testServiceName);
     self::assertSame($testService, $loadedService, 'The container service should be loaded.');
+  }
+
+  public function testBundledExtensions(): void
+  {
+    $makeMockTokenParser = function (string $tag): TokenParserInterface {
+      $mock = $this->createMock(TokenParserInterface::class);
+      $mock->expects($this->once())->method('getTag')->willReturn($tag);
+      return $mock;
+    };
+    $valueSets = [
+      'tokenParsers' => [$makeMockTokenParser('tag-one'), $makeMockTokenParser('tag-two')],
+      'nodeVisitors' => [
+        $this->createStub(NodeVisitorInterface::class),
+        $this->createStub(NodeVisitorInterface::class),
+      ],
+      'filters' => [new TwigFilter('filter-one'), new TwigFilter('filter-two')],
+      'tests' => [new TwigTest('test-one'), new TwigTest('test-two')],
+      'functions' => [new TwigFunction('function-one'), new TwigFunction('function-two')],
+      'operators' => [
+        // One
+        [
+          'test-first' => [
+            'precedence' => 1,
+            'class' => 'test-one',
+          ],
+        ],
+        [
+          'test-last' => [
+            'precedence' => 2,
+            'class' => 'test-two',
+            'associativity' => 1,
+          ],
+        ],
+      ],
+      'globals' => [
+        'global-one' => 'value-one',
+        'global-two' => 'value-two',
+      ],
+    ];
+
+    $extension = $this->createMockForIntersectionOfInterfaces([ExtensionInterface::class, GlobalsInterface::class]);
+
+    foreach ($valueSets as $valueType => $values) {
+      $method = 'get' . \ucfirst($valueType);
+      $extension->expects($this->once())->method($method)->willReturn($values);
+    }
+
+    $environment = self::makeCustomEnvironment();
+    $environment->addExtension($extension);
+
+    foreach ($valueSets as $valueType => $values) {
+      if ($valueType === 'operators') {
+        continue;
+      }
+
+      $method = 'get' . \ucfirst($valueType);
+      self::assertContainsAll(
+        $values,
+        $environment->{$method}(),
+        \sprintf('The bundled extension %s values should be added.', $valueType),
+      );
+    }
+
+    $expectedOperatorNames = \array_map(
+      static fn(array $operators): string => \array_keys($operators)[0],
+      $valueSets['operators'],
+    );
+    $expressionParsers = \iterator_to_array($environment->getExpressionParsers()->getIterator());
+    self::assertContainsAll(
+      $expectedOperatorNames,
+      \array_keys($expressionParsers),
+      'The bundled extension operators should be processed.',
+    );
   }
 
   private static function makeCustomEnvironment(): TwigEnvironment
