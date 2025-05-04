@@ -5,6 +5,7 @@ namespace Averay\TwigExtensions\Bundles;
 
 use Averay\TwigExtensions\Extensions;
 use Averay\TwigExtensions\Helpers\TemplateDumperInterface;
+use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -64,9 +65,9 @@ final class DefaultBundle extends AbstractBundle
    * @return $this
    * @see SymfonyBundle
    */
-  public function withSymfony(?Packages $assetPackages): static
+  public function withSymfony(?AppVariable $appVariable, ?Packages $assetPackages): static
   {
-    $this->extensions[] = new SymfonyBundle($this->translator, $assetPackages);
+    $this->extensions[] = new SymfonyBundle($appVariable, $this->translator, $assetPackages);
     return $this;
   }
 }
