@@ -1,0 +1,49 @@
+{
+  "name": "averay/twig-extensions",
+  "type": "library",
+  "license": "MIT",
+  "version": "0.1.0",
+  "homepage": "https://github.com/adamaveray/twig-extensions",
+  "authors": [
+    {
+      "name": "Adam Averay",
+      "homepage": "https://adamaveray.au/"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Averay\\TwigExtensions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Averay\\TwigExtensions\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=8.4",
+    "ext-intl": "*",
+    "averay/html-builder": "^0.1",
+    "fakerphp/faker": "^1.24",
+    "league/commonmark": "^2.6",
+    "psr/container": "^2.0",
+    "symfony/asset": "^7.2",
+    "symfony/contracts": "^3.5",
+    "symfony/mime": "^7.2",
+    "symfony/stopwatch": "^7.2",
+    "symfony/string": "^7.2",
+    "symfony/translation": "^7.2",
+    "symfony/twig-bridge": "^7.2",
+    "symfony/var-dumper": "^7.2",
+    "twig/cache-extra": "^3.21",
+    "twig/intl-extra": "^3.21",
+    "twig/twig": "^v3.21"
+  },
+  "require-dev": {
+    "ext-simplexml": "*",
+    "phpunit/phpunit": "^12.1",
+    "roave/security-advisories": "dev-latest",
+    "symfony/http-foundation": "^7.2",
+    "vimeo/psalm": "^6.10"
+  }
+}

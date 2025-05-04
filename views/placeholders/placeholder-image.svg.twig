@@ -1,0 +1,50 @@
+{%- assert width is defined and height is defined 'Width & height must be provided.' -%}
+{%- assert (colors | length) == 4 'Exactly 4 colours must be provided.' -%}
+{%- set font_family = font_family ?? 'system, -apple-system, BlinkMacSystemFont, sans-serif' -%}
+{%- set font_size = font_size ?? min(width / 6, height / 3, 50) -%}
+{%- macro rgb(color) -%}
+  {%- assert (color | length) == 3 'Exactly 3 color channels must be provided.' -%}
+  rgb({{ color['r'] }},{{ color['g'] }},{{ color['b'] }})
+{%- endmacro -%}
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="{{ width }}"
+     height="{{ height }}"
+     viewBox="0 0 {{ width }} {{ height }}"
+     preserveAspectRatio="none"
+>
+  <defs>
+    <linearGradient id="gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop stop-color="{{ _self.rgb(colors[0]) }}" offset="0%" />
+      <stop stop-color="{{ _self.rgb(colors[1]) }}" offset="100%" />
+    </linearGradient>
+    <linearGradient id="gradient-2" x1="100%" y1="0%" x2="10%" y2="100%">
+      <stop stop-color="{{ _self.rgb(colors[2]) }}" offset="0%" />
+      <stop stop-color="{{ _self.rgb(colors[3]) }}" offset="100%" />
+    </linearGradient>
+  </defs>
+
+  <rect fill="url(#gradient-1)" width="100%" height="100%" />
+  <rect fill="url(#gradient-2)" width="100%" height="100%" fill-opacity="0.5" />
+
+  <text x="50%"
+        y="50%"
+        transform="translate(0, -{{ font_size * 0.3 }})"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="{{ font_size }}"
+        font-weight="bold"
+        font-family="{{ font_family }}"
+        fill="#fff"
+  >{{ label ?? 'Placeholder' }}</text>
+  <text x="50%"
+        y="50%"
+        transform="translate(0, {{ font_size * 0.6 }})"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="{{ font_size * 0.7 }}"
+        font-weight="normal"
+        font-family="{{ font_family }}"
+        fill="#fff"
+        fill-opacity="0.8"
+  >{{ width }} × {{ height }}</text>
+</svg>
