@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "024882f477d0fdc0c87d19c526f66c2a",
+    "content-hash": "c513fdca80632630ffe1e0819d7e8f7e",
     "packages": [
         {
             "name": "averay/html-builder",
