@@ -7,6 +7,7 @@ use Averay\TwigExtensions\Bundles\AbstractBundle;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\TwigEnvironment;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
@@ -56,11 +57,7 @@ final class TwigEnvironmentTest extends TestCase
   {
     $environment = self::makeCustomEnvironment();
 
-    $builder = $this->getMockBuilder(ExtensionInterface::class);
-    $extensions = [
-      $builder->setMockClassName('MockExtensionOne')->getMock(),
-      $builder->setMockClassName('MockExtensionTwo')->getMock(),
-    ];
+    $extensions = [$this->createMockExtension(), $this->createMockExtension()];
 
     $environment->addExtensions($extensions);
 
@@ -227,6 +224,19 @@ final class TwigEnvironmentTest extends TestCase
       \array_keys($expressionParsers),
       'The bundled extension operators should be processed.',
     );
+  }
+
+  /**
+   * @param array<string, mixed> $methods
+   */
+  private function createMockExtension(?string $name = null, array $methods = []): ExtensionInterface&MockObject
+  {
+    $name ??= 'MockExtension__' . \random_int(10_000, 99_999);
+    $mock = $this->getMockBuilder(ExtensionInterface::class)->setMockClassName($name)->getMock();
+    foreach ($methods as $method => $returnValue) {
+      $mock->expects($this->once())->method($method)->willReturn($returnValue);
+    }
+    return $mock;
   }
 
   private static function makeCustomEnvironment(): TwigEnvironment
