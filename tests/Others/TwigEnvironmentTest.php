@@ -54,14 +54,40 @@ final class TwigEnvironmentTest extends TestCase
 
   public function testBundles(): void
   {
-    $extensions = [$this->createMockExtension(), $this->createMockExtension()];
+    $createMockBundle = function (array $extensions = []): ExtensionBundleInterface&MockObject {
+      $bundle = $this->createMock(ExtensionBundleInterface::class);
+      $bundle->expects($this->once())->method('getExtensions')->willReturn($extensions);
+      return $bundle;
+    };
 
-    $bundle = $this->createMock(ExtensionBundleInterface::class);
-    $bundle->expects($this->once())->method('getExtensions')->willReturn($extensions);
+    // Test additing single bundle
+    $initialExtensions = [$this->createMockExtension(), $this->createMockExtension()];
+    $initialBundle = $createMockBundle($initialExtensions);
 
     $environment = self::makeCustomEnvironment();
-    $environment->addBundle($bundle);
-    self::assertContainsAll($extensions, $environment->getExtensions(), 'The extensions should be stored.');
+    $environment->addBundle($initialBundle);
+    self::assertContainsAll(
+      $initialExtensions,
+      $environment->getExtensions(),
+      'The bundled extensions should be loaded.',
+    );
+
+    // Test adding multiple bundles
+    $additionalExtensionSets = [
+      'one' => [$this->createMockExtension(), $this->createMockExtension()],
+      'two' => [$this->createMockExtension()],
+    ];
+    $additionalBundles = [
+      $createMockBundle($additionalExtensionSets['one']),
+      $createMockBundle($additionalExtensionSets['two']),
+    ];
+    $environment->addBundles($additionalBundles);
+
+    self::assertContainsAll(
+      \array_merge($additionalExtensionSets['one'], $additionalExtensionSets['two']),
+      $environment->getExtensions(),
+      'The bundled extensions should be loaded.',
+    );
   }
 
   public function testExtensions(): void

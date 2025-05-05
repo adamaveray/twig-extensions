@@ -91,6 +91,16 @@ class TwigEnvironment extends \Twig\Environment
   }
 
   /**
+   * @param iterable<ExtensionBundleInterface> $bundles
+   */
+  public function addBundles(iterable $bundles): void
+  {
+    foreach ($bundles as $bundle) {
+      $this->addBundle($bundle);
+    }
+  }
+
+  /**
    * @param iterable<TokenParserInterface> $tokenParsers
    */
   public function addTokenParsers(iterable $tokenParsers): void
