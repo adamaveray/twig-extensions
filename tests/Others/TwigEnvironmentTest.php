@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Others;
 
-use Averay\TwigExtensions\Bundles\AbstractBundle;
+use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\TwigEnvironment;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -11,7 +11,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
-use Twig\Extension\GlobalsInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -51,6 +50,18 @@ final class TwigEnvironmentTest extends TestCase
 
     $reflectionProperty = new \ReflectionProperty(Environment::class, 'runtimeLoaders');
     self::assertSame($loaders, $reflectionProperty->getValue($environment), 'The runtime loaders should be stored.');
+  }
+
+  public function testBundles(): void
+  {
+    $extensions = [$this->createMockExtension(), $this->createMockExtension()];
+
+    $bundle = $this->createMock(ExtensionBundleInterface::class);
+    $bundle->expects($this->once())->method('getExtensions')->willReturn($extensions);
+
+    $environment = self::makeCustomEnvironment();
+    $environment->addBundle($bundle);
+    self::assertContainsAll($extensions, $environment->getExtensions(), 'The extensions should be stored.');
   }
 
   public function testExtensions(): void
@@ -145,85 +156,6 @@ final class TwigEnvironmentTest extends TestCase
     $environment = new TwigEnvironment(new ArrayLoader([]), ['container' => $container]);
     $loadedService = $environment->getRuntime($testServiceName);
     self::assertSame($testService, $loadedService, 'The container service should be loaded.');
-  }
-
-  public function testBundledExtensions(): void
-  {
-    $makeMockTokenParser = function (string $tag): TokenParserInterface {
-      $mock = $this->createMock(TokenParserInterface::class);
-      $mock->expects($this->once())->method('getTag')->willReturn($tag);
-      return $mock;
-    };
-    $valueSets = [
-      'tokenParsers' => [$makeMockTokenParser('tag-one'), $makeMockTokenParser('tag-two')],
-      'nodeVisitors' => [
-        $this->createStub(NodeVisitorInterface::class),
-        $this->createStub(NodeVisitorInterface::class),
-      ],
-      'filters' => [new TwigFilter('filter-one'), new TwigFilter('filter-two')],
-      'tests' => [new TwigTest('test-one'), new TwigTest('test-two')],
-      'functions' => [new TwigFunction('function-one'), new TwigFunction('function-two')],
-      'operators' => [
-        [
-          'test-unary-one' => [
-            'precedence' => 1,
-            'class' => 'test-one',
-          ],
-          'test-unary-two' => [
-            'precedence' => 1,
-            'class' => 'test-two',
-          ],
-        ],
-        [
-          'test-binary-one' => [
-            'precedence' => 2,
-            'class' => 'test-three',
-            'associativity' => 1,
-          ],
-          'test-binary-two' => [
-            'precedence' => 3,
-            'class' => 'test-four',
-            'associativity' => 1,
-          ],
-        ],
-      ],
-      'globals' => [
-        'global-one' => 'value-one',
-        'global-two' => 'value-two',
-      ],
-    ];
-
-    $extension = $this->createMockForIntersectionOfInterfaces([ExtensionInterface::class, GlobalsInterface::class]);
-
-    foreach ($valueSets as $valueType => $values) {
-      $method = 'get' . \ucfirst($valueType);
-      $extension->expects($this->once())->method($method)->willReturn($values);
-    }
-
-    $environment = self::makeCustomEnvironment();
-    $environment->addExtension($extension);
-
-    foreach ($valueSets as $valueType => $values) {
-      if ($valueType === 'operators') {
-        continue;
-      }
-
-      $method = 'get' . \ucfirst($valueType);
-      self::assertContainsAll(
-        $values,
-        $environment->{$method}(),
-        \sprintf('The bundled extension %s values should be added.', $valueType),
-      );
-    }
-
-    $expectedUnaryOperatorNames = \array_keys($valueSets['operators'][0]);
-    $expectedBinaryOperatorNames = \array_keys($valueSets['operators'][1]);
-    $expressionParsers = \iterator_to_array($environment->getExpressionParsers()->getIterator());
-    self::assertContainsAll(
-      \array_merge($expectedUnaryOperatorNames, $expectedBinaryOperatorNames),
-      \array_keys($expressionParsers),
-      'The bundled extension operators should be processed.',
-    );
   }
 
   /**

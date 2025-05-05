@@ -34,7 +34,6 @@ final class DefaultBundle extends AbstractBundle
   }
 
   /**
-   * @return $this
    * @see DevelopmentExtension
    */
   public function withDevelopment(
@@ -43,31 +42,28 @@ final class DefaultBundle extends AbstractBundle
     ?TemplateDumperInterface $templateDumper = null,
     ?Stopwatch $profileStopwatch = null,
   ): static {
-    $this->extensions[] = new DevelopmentExtension($stopwatch, $profile, $templateDumper, $profileStopwatch);
-    return $this;
+    return $this->withBundle(new DevelopmentExtension($stopwatch, $profile, $templateDumper, $profileStopwatch));
   }
 
   /**
-   * @return $this
    * @see IntlBundle
    */
   public function withIntl(?\IntlDateFormatter $dateFormatter = null, ?\NumberFormatter $numberFormatter = null): static
   {
-    $this->extensions[] = new IntlBundle(
-      $this->translator ?? throw new \LogicException('Translator must be set.'),
-      $dateFormatter,
-      $numberFormatter,
+    return $this->withBundle(
+      new IntlBundle(
+        $this->translator ?? throw new \LogicException('Translator must be set.'),
+        $dateFormatter,
+        $numberFormatter,
+      ),
     );
-    return $this;
   }
 
   /**
-   * @return $this
    * @see SymfonyBundle
    */
   public function withSymfony(?AppVariable $appVariable, ?Packages $assetPackages): static
   {
-    $this->extensions[] = new SymfonyBundle($appVariable, $this->translator, $assetPackages);
-    return $this;
+    return $this->withBundle(new SymfonyBundle($appVariable, $this->translator, $assetPackages));
   }
 }

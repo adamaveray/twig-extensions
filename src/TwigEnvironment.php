@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions;
 
+use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Cache\CacheInterface;
 use Twig\Extension\ExtensionInterface;
+use Twig\Extension\GlobalsInterface;
 use Twig\Extra as TwigExtra;
 use Twig\Loader\LoaderInterface;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -81,6 +83,11 @@ class TwigEnvironment extends \Twig\Environment
     foreach ($extensions as $extension) {
       $this->addExtension($extension);
     }
+  }
+
+  public function addBundle(ExtensionBundleInterface $bundle): void
+  {
+    $this->addExtensions($bundle->getExtensions());
   }
 
   /**

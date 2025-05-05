@@ -5,7 +5,7 @@ namespace Averay\TwigExtensions\Bundles;
 
 use Twig\Extension\ExtensionInterface;
 
-interface BundledExtensionsInterface
+interface ExtensionBundleInterface
 {
   /**
    * @return list<ExtensionInterface>
