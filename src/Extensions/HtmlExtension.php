@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
 
-use Averay\HtmlBuilder\Html;
 use Averay\HtmlBuilder\Html\HtmlBuilder;
 use Averay\TwigExtensions\Extensions\Traits\WithRequest;
 use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
