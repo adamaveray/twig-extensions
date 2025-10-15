@@ -12,7 +12,7 @@
   findUnusedCode="true"
   findUnusedPsalmSuppress="true"
   findUnusedVariablesAndParams="true"
-  phpVersion="8.2"
+  phpVersion="8.4"
   resolveFromConfigFile="true"
   strictBinaryOperands="true"
 >
