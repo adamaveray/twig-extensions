@@ -27,14 +27,14 @@
     "fakerphp/faker": "^1.24",
     "league/commonmark": "^2.7",
     "psr/container": "^2.0",
-    "symfony/asset": "^7.2",
+    "symfony/asset": "^7.3",
     "symfony/contracts": "^3.5",
-    "symfony/mime": "^7.2",
-    "symfony/stopwatch": "^7.2",
-    "symfony/string": "^7.2",
-    "symfony/translation": "^7.2",
-    "symfony/twig-bridge": "^7.2",
-    "symfony/var-dumper": "^7.2",
+    "symfony/mime": "^7.3",
+    "symfony/stopwatch": "^7.3",
+    "symfony/string": "^7.3",
+    "symfony/translation": "^7.3",
+    "symfony/twig-bridge": "^7.3",
+    "symfony/var-dumper": "^7.3",
     "twig/cache-extra": "^3.21",
     "twig/intl-extra": "^3.21",
     "twig/twig": "^v3.21"
@@ -43,7 +43,7 @@
     "ext-simplexml": "*",
     "phpunit/phpunit": "^12.4",
     "roave/security-advisories": "dev-latest",
-    "symfony/http-foundation": "^7.2",
+    "symfony/http-foundation": "^7.3",
     "vimeo/psalm": "^6.13"
   }
 }
