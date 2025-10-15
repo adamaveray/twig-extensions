@@ -41,9 +41,9 @@
   },
   "require-dev": {
     "ext-simplexml": "*",
-    "phpunit/phpunit": "^12.1",
+    "phpunit/phpunit": "^12.4",
     "roave/security-advisories": "dev-latest",
     "symfony/http-foundation": "^7.2",
-    "vimeo/psalm": "^6.10"
+    "vimeo/psalm": "^6.13"
   }
 }
