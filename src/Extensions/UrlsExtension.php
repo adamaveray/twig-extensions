@@ -11,8 +11,8 @@ use function Symfony\Component\String\u;
 
 final class UrlsExtension extends AbstractExtension
 {
-  private const URL_WWW_PREFIX = 'www.';
-  private const URL_PARTS_MAP = [
+  private const string URL_WWW_PREFIX = 'www.';
+  private const array URL_PARTS_MAP = [
     'scheme' => \PHP_URL_SCHEME,
     'host' => \PHP_URL_HOST,
     'port' => \PHP_URL_PORT,

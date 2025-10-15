@@ -13,7 +13,7 @@ use Twig\TwigFunction;
 #[CoversClass(PlaceholdersExtension::class)]
 final class PlaceholderStringsTest extends TestCase
 {
-  private const DEFAULT_LOCALE = 'en_GB';
+  private const string DEFAULT_LOCALE = 'en_GB';
 
   #[DataProvider('generatorDataProvider')]
   public function testGenerator(string $parameters): void

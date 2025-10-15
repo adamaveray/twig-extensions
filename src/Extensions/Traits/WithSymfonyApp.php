@@ -7,7 +7,7 @@ use Symfony\Bridge\Twig\AppVariable;
 
 trait WithSymfonyApp
 {
-  public const CONTEXT_VALUE_SYMFONY_APP = 'app';
+  final public const string CONTEXT_VALUE_SYMFONY_APP = 'app';
 
   final protected static function getAppVariableFromContext(array $context): ?AppVariable
   {

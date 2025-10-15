@@ -12,7 +12,7 @@ use Twig\TwigTest;
 
 final class SameDateAsTest extends TestExpression
 {
-  private const DEFAULT_DATETIME_FORMAT = \DateTimeInterface::ATOM;
+  private const string DEFAULT_DATETIME_FORMAT = \DateTimeInterface::ATOM;
   private ?string $defaultFormat;
 
   public function __construct(Node $node, TwigTest|string $test, ?Node $arguments, int $lineno)

@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 trait WithRequest
 {
-  public const CONTEXT_VALUE_REQUEST = 'request';
-  public const CONTEXT_VALUE_REQUEST_URI = 'request_uri';
+  final public const string CONTEXT_VALUE_REQUEST = 'request';
+  final public const string CONTEXT_VALUE_REQUEST_URI = 'request_uri';
 
   final protected static function inferRequest(array $context): PsrServerRequestInterface|SymfonyRequest|null
   {

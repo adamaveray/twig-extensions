@@ -19,7 +19,7 @@ final class PlaceholdersExtension extends AbstractExtension
   use WithLocale;
   use WithSymfonyApp;
 
-  private const PATH_IMAGE_TEMPLATE = __DIR__ . '/../../views/placeholders/placeholder-image.svg.twig';
+  private const string PATH_IMAGE_TEMPLATE = __DIR__ . '/../../views/placeholders/placeholder-image.svg.twig';
 
   /** @var array<string, Generator> $generators Keys are locales. */
   private array $generators = [];

@@ -12,7 +12,7 @@ use function Symfony\Component\String\u;
 #[CoversClass(StringsExtension::class)]
 final class StringsCaseTest extends TestCase
 {
-  private const DEFAULT_LOCALE = 'en';
+  private const string DEFAULT_LOCALE = 'en';
 
   #[DataProvider('upperDataProvider')]
   public function testUpperCaseConversion(
