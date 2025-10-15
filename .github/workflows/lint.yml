@@ -20,11 +20,10 @@ jobs:
       NODE_ENV: development
 
     steps:
-      - uses: actions/checkout@v3
-        with: { fetch-depth: 0 }
+      - uses: actions/checkout@v5
 
       - name: Use Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
 
       - name: Use PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
@@ -34,7 +33,7 @@ jobs:
         env: { fail-fast: true }
 
       - name: Cache NPM packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env: { cache-name: npm }
         with:
           path: node_modules
@@ -45,7 +44,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Cache Composer packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env: { cache-name: composer }
         with:
           path: vendor
