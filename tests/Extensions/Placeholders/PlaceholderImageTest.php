@@ -12,7 +12,7 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DependsOnClass;
 use Symfony\Component\Mime\MimeTypes;
-use function Symfony\Component\String\b;
+use function Symfony\Component\String\u;
 
 #[CoversClass(PlaceholdersExtension::class)]
 #[CoversClass(AssertionsExtension::class)]
@@ -34,11 +34,11 @@ final class PlaceholderImageTest extends TestCase
       runtimeResources: [HtmlBuilder::class => new HtmlBuilder(new MimeTypes())],
     );
 
-    $dataUriPrefix = 'data:image/svg+xml;base64,';
+    $dataUriPrefix = 'data:image/svg+xml,';
     $result = $environment->render('template', ['width' => $width, 'height' => $height]);
     self::assertStringStartsWith($dataUriPrefix, $result, 'The image should be a valid data URI.');
 
-    $xml = \base64_decode(b($result)->trimPrefix($dataUriPrefix)->toString());
+    $xml = \rawurldecode(u($result)->trimPrefix($dataUriPrefix)->toString());
     new \SimpleXMLElement($xml);
   }
 }
