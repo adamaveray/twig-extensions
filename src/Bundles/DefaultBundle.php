@@ -28,6 +28,7 @@ final class DefaultBundle extends AbstractBundle
       new Extensions\HtmlExtension(),
       new Extensions\LogicExtension(),
       new Extensions\StringsExtension($this->translator),
+      new Extensions\UnitsExtension(),
       new Extensions\UrlsExtension(),
       new Extensions\ValuesExtension(),
     ];
