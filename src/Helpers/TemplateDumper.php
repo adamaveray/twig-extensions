@@ -19,7 +19,7 @@ final class TemplateDumper extends ContextualizedDumper implements TemplateDumpe
 
     if ($cloner === null) {
       $cloner = new VarCloner();
-      /** @psalm-suppress InvalidArgument Psalm cannot infer generated callable syntax. */
+      /** @psalm-suppress InvalidArgument,InternalClass Psalm cannot infer generated callable syntax. */
       $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
     }
     $this->cloner = $cloner;
