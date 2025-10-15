@@ -5,7 +5,6 @@ namespace Averay\TwigExtensions\Extensions;
 
 use Averay\HtmlBuilder\Html\HtmlBuilder;
 use Averay\TwigExtensions\Extensions\Traits\WithLocale;
-use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -17,7 +16,6 @@ use Twig\TwigFunction;
 final class PlaceholdersExtension extends AbstractExtension
 {
   use WithLocale;
-  use WithSymfonyApp;
 
   private const string PATH_IMAGE_TEMPLATE = __DIR__ . '/../../views/placeholders/placeholder-image.svg.twig';
 

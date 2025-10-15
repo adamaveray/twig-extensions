@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Averay\TwigExtensions\Extensions;
 
 use Averay\TwigExtensions\Extensions\Traits\WithLocale;
-use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
 use League\CommonMark\ConverterInterface as MarkdownConverterInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -18,7 +17,6 @@ use function Symfony\Component\String\u;
 final class StringsExtension extends AbstractExtension
 {
   use WithLocale;
-  use WithSymfonyApp;
 
   public function __construct(string|TranslatorInterface|null $translatorOrLocale = null)
   {

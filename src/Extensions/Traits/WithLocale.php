@@ -7,6 +7,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait WithLocale
 {
+  use WithSymfonyApp;
+
   final public const string CONTEXT_VALUE_LOCALE = 'locale';
 
   /** @var callable():(string|null)|null */

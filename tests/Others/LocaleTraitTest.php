@@ -77,7 +77,6 @@ final class LocaleTraitTest extends TestCase
   {
     return new class ($translatorOrLocale) {
       use WithLocale;
-      use WithSymfonyApp;
 
       public function __construct(string|TranslatorInterface|null $translatorOrLocale)
       {
