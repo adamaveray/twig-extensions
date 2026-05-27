@@ -321,10 +321,7 @@ final class StringsBasicTest extends TestCase
   private function createMockMarkdownLoader(string $input, string $output, array $filters): RuntimeLoaderInterface
   {
     $renderedContent = $this->createMock(RenderedContentInterface::class);
-    $renderedContent
-      ->expects($this->exactly(\count($filters)))
-      ->method('__toString')
-      ->willReturn($output);
+    $renderedContent->expects($this->exactly(\count($filters)))->method('__toString')->willReturn($output);
 
     $converter = $this->createMock(ConverterInterface::class);
     $converter
