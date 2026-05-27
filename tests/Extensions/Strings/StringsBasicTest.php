@@ -169,17 +169,14 @@ final class StringsBasicTest extends TestCase
       ->with($input, $expectedSeparator, $expectedLocale)
       ->willReturn($outputString);
 
-    $loader = $this->createMock(RuntimeLoaderInterface::class);
-    $loader->expects($this->once())->method('load')->with(SluggerInterface::class)->willReturn($slugger);
-
     $environment = self::makeEnvironment(
       <<<TWIG
       {{- string | slug($twigParameters) -}}
       TWIG
       ,
       [new StringsExtension($locale)],
+      [SluggerInterface::class => $slugger],
     );
-    $environment->addRuntimeLoader($loader);
 
     self::assertRenders($output, $environment, context: ['string' => $input]);
   }

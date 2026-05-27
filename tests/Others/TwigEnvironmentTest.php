@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
-use Twig\Extension\ExtensionInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -60,8 +60,8 @@ final class TwigEnvironmentTest extends TestCase
       return $bundle;
     };
 
-    // Test additing single bundle
-    $initialExtensions = [$this->createMockExtension(), $this->createMockExtension()];
+    // Test adding single bundle
+    $initialExtensions = [new class extends AbstractExtension {}, new class extends AbstractExtension {}];
     $initialBundle = $createMockBundle($initialExtensions);
 
     $environment = self::makeCustomEnvironment();
@@ -74,8 +74,8 @@ final class TwigEnvironmentTest extends TestCase
 
     // Test adding multiple bundles
     $additionalExtensionSets = [
-      'one' => [$this->createMockExtension(), $this->createMockExtension()],
-      'two' => [$this->createMockExtension()],
+      'one' => [new class extends AbstractExtension {}, new class extends AbstractExtension {}],
+      'two' => [new class extends AbstractExtension {}],
     ];
     $additionalBundles = [
       $createMockBundle($additionalExtensionSets['one']),
@@ -94,7 +94,7 @@ final class TwigEnvironmentTest extends TestCase
   {
     $environment = self::makeCustomEnvironment();
 
-    $extensions = [$this->createMockExtension(), $this->createMockExtension()];
+    $extensions = [new class extends AbstractExtension {}, new class extends AbstractExtension {}];
 
     $environment->addExtensions($extensions);
 
@@ -103,13 +103,12 @@ final class TwigEnvironmentTest extends TestCase
 
   public function testTokenParsers(): void
   {
-    $builder = $this->getMockBuilder(TokenParserInterface::class);
-    $tokenParsers = [
-      $builder->setMockClassName('MockTokenParserOne')->getMock(),
-      $builder->setMockClassName('MockTokenParserTwo')->getMock(),
-    ];
-    $tokenParsers[0]->method('getTag')->willReturn('one');
-    $tokenParsers[1]->method('getTag')->willReturn('two');
+    $createTokenParser = function (string $tag): TokenParserInterface {
+      $tokenParser = $this->createStub(TokenParserInterface::class);
+      $tokenParser->method('getTag')->willReturn($tag);
+      return $tokenParser;
+    };
+    $tokenParsers = [$createTokenParser('one'), $createTokenParser('two')];
 
     $environment = self::makeCustomEnvironment();
     $environment->addTokenParsers($tokenParsers);
@@ -182,19 +181,6 @@ final class TwigEnvironmentTest extends TestCase
     $environment = new TwigEnvironment(new ArrayLoader([]), ['container' => $container]);
     $loadedService = $environment->getRuntime($testServiceName);
     self::assertSame($testService, $loadedService, 'The container service should be loaded.');
-  }
-
-  /**
-   * @param array<string, mixed> $methods
-   */
-  private function createMockExtension(?string $name = null, array $methods = []): ExtensionInterface&MockObject
-  {
-    $name ??= 'MockExtension__' . \random_int(10_000, 99_999);
-    $mock = $this->getMockBuilder(ExtensionInterface::class)->setMockClassName($name)->getMock();
-    foreach ($methods as $method => $returnValue) {
-      $mock->expects($this->once())->method($method)->willReturn($returnValue);
-    }
-    return $mock;
   }
 
   private static function makeCustomEnvironment(): TwigEnvironment
