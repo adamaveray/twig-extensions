@@ -35,6 +35,12 @@ final class RequestTraitTest extends TestCase
     self::assertSame($expected, $instance->getRequest($context), 'The request should be inferred correctly.');
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: PsrServerRequestInterface|SymfonyHttp\Request|null,
+   *   context: array<string, mixed>,
+   * }>
+   */
   public static function requestInferenceDataProvider(): iterable
   {
     $psrRequest = self::createStub(PsrServerRequestInterface::class);
@@ -76,6 +82,9 @@ final class RequestTraitTest extends TestCase
     self::assertSame($expected, $instance->getRequestUri($context), 'The request URI should be inferred correctly.');
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, context: array<string, mixed> }>
+   */
   public static function requestUriInferenceDataProvider(): iterable
   {
     $uri = '/example/page/';

@@ -29,6 +29,9 @@ final class UrlsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, url: string, parameters: string }>
+   */
   public static function urlPartDataProvider(): iterable
   {
     $exampleUrl = 'https://testUsername:testPassword@www.example.com:123/test/path/?hello=world#test-fragment';
@@ -106,6 +109,9 @@ final class UrlsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, url: string, parameters: string }>
+   */
   public static function appendQueryParamsDataProvider(): iterable
   {
     yield 'No existing query' => [

@@ -50,6 +50,9 @@ final class DatesTest extends TestCase
     }
   }
 
+  /**
+   * @return iterable<string, array{ bool, string|list<string>, array<string, mixed> }>
+   */
   public static function isSameDateDataProvider(): iterable
   {
     yield 'Same' => [
@@ -196,6 +199,9 @@ final class DatesTest extends TestCase
     $environment->render('template', ['datetime' => new \DateTimeImmutable('2000-01-01T00:00:00Z')]);
   }
 
+  /**
+   * @return iterable<string, array{ string }>
+   */
   public static function rejectsCustomFormatForSpecificComparatorsDataProvider(): iterable
   {
     yield 'same_year' => ['same_year'];

@@ -17,6 +17,10 @@ use Twig\Error\RuntimeError;
 #[CoversClass(ArraysExtension::class)]
 final class ArrayOthersTest extends TestCase
 {
+  /**
+   * @param list<string> $expected
+   * @param list<string> $array
+   */
   #[Test]
   #[DataProvider('appendDataProvider')]
   public function append(array $expected, array $array, string $parameters): void
@@ -33,6 +37,9 @@ final class ArrayOthersTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: list<string>, array: list<string>, parameters: string }>
+   */
   public static function appendDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -54,6 +61,10 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  /**
+   * @param array<string, int|string> $expected
+   * @param array<string, int|null> $array
+   */
   #[Test]
   #[DataProvider('mergeExistingDataProvider')]
   public function mergeExisting(array $expected, array $array, string $parameters): void
@@ -70,6 +81,13 @@ final class ArrayOthersTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: array<string, int|string>,
+   *   array: array<string, int|null>,
+   *   parameters: string,
+   * }>
+   */
   public static function mergeExistingDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -135,6 +153,10 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  /**
+   * @param array<array-key, string> $expected
+   * @param array<array-key, string> $array
+   */
   #[Test]
   #[DataProvider('omitDataProvider')]
   public function omit(array $expected, array $array, string $parameters): void
@@ -151,6 +173,13 @@ final class ArrayOthersTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: array<array-key, string>,
+   *   array: array<array-key, string>,
+   *   parameters: string,
+   * }>
+   */
   public static function omitDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -194,6 +223,10 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  /**
+   * @param array<array-key, int|string> $expected
+   * @param array<array-key, int|string> $array
+   */
   #[Test]
   #[DataProvider('pickDataProvider')]
   public function pick(array $expected, array $array, string $parameters): void
@@ -210,6 +243,13 @@ final class ArrayOthersTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: array<array-key, int|string>,
+   *   array: array<array-key, int|string>,
+   *   parameters: string,
+   * }>
+   */
   public static function pickDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -262,6 +302,10 @@ final class ArrayOthersTest extends TestCase
     $environment->render('template');
   }
 
+  /**
+   * @param array<string, string> $expected
+   * @param array<array-key, int|string> $array
+   */
   #[Test]
   #[DataProvider('mapEntriesDataProvider')]
   public function mapEntries(array $expected, array $array, string $parameters): void
@@ -278,6 +322,13 @@ final class ArrayOthersTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: array<string, string>,
+   *   array: array<array-key, int|string>,
+   *   parameters: string,
+   * }>
+   */
   public static function mapEntriesDataProvider(): iterable
   {
     yield 'Empty' => [

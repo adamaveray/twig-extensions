@@ -29,6 +29,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['string' => $string, 'wrapping_tag' => $wrappingTag]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, string: string, wrappingTag: string }>
+   */
   public static function wrapWordsDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -60,6 +63,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['string' => $string, 'wrapping_tag' => $wrappingTag]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, string: string, wrappingTag?: string }>
+   */
   public static function wrapParagraphsDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -100,6 +106,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['class_list' => $classList]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, classList: string, parameters: string }>
+   */
   public static function addClassDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -135,6 +144,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['html' => $html]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, html: string, parameters: string }>
+   */
   public static function mapHtmlIdsDataProvider(): iterable
   {
     $transformer = '(id) => "new-" ~ id ~ "-value"';
@@ -203,6 +215,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['html' => $html]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, html: string, parameters: string }>
+   */
   public static function prefixHtmlIdsDataProvider(): iterable
   {
     $prefix = '"prefixed"';
@@ -311,6 +326,9 @@ final class HtmlFiltersTest extends TestCase
     self::assertRenders($expected, $environment, context: ['data' => $data]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, data: string, parameters: string, inferredMimeType?: string }>
+   */
   public static function dataUriDataProvider(): iterable
   {
     yield 'Preset text' => [

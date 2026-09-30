@@ -17,6 +17,10 @@ use Twig\Error\RuntimeError;
 #[CoversClass(ArraysExtension::class)]
 final class ArraySortTest extends TestCase
 {
+  /**
+   * @param array<array-key, string> $expected
+   * @param iterable<array-key, string> $array
+   */
   #[Test]
   #[DataProvider('sortDataProvider')]
   public function sortFilter(array $expected, iterable $array, string $parameters): void
@@ -33,6 +37,13 @@ final class ArraySortTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: array<array-key, string>,
+   *   array: iterable<array-key, string>,
+   *   parameters: string,
+   * }>
+   */
   public static function sortDataProvider(): iterable
   {
     yield 'Empty' => [

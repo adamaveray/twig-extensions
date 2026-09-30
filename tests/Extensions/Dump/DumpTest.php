@@ -81,6 +81,9 @@ final class DumpTest extends TestCase
     );
   }
 
+  /**
+   * @param list<string> $arguments
+   */
   #[Test]
   #[DataProvider('dumpDataProvider')]
   public function templateDumper(array $arguments, string $syntax, bool $labels): void
@@ -108,6 +111,9 @@ final class DumpTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ list<string>, string, bool }>
+   */
   public static function dumpDataProvider(): iterable
   {
     yield 'Single arguments' => [['hello world'], '"hello world"', false];
@@ -125,6 +131,9 @@ final class DumpTest extends TestCase
     );
   }
 
+  /**
+   * @param array<array-key, mixed> $expectedConsecutiveArguments
+   */
   private static function createStubDumper(
     array $expectedConsecutiveArguments,
     string $dumpOutput,

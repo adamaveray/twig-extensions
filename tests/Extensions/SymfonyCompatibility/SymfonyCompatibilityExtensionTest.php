@@ -17,6 +17,9 @@ use Symfony\Bridge\Twig\AppVariable;
 #[CoversClass(SymfonyCompatibilityExtension::class)]
 final class SymfonyCompatibilityExtensionTest extends TestCase
 {
+  /**
+   * @param array<string, AppVariable> $expected
+   */
   #[Test]
   #[DataProvider('globalsDataProvider')]
   public function globals(array $expected, ?AppVariable $appVariable): void
@@ -25,6 +28,9 @@ final class SymfonyCompatibilityExtensionTest extends TestCase
     self::assertSame($expected, $extension->getGlobals(), 'The globals should be generated correctly.');
   }
 
+  /**
+   * @return iterable<string, array{ expected: array<string, AppVariable>, appVariable: AppVariable|null }>
+   */
   public static function globalsDataProvider(): iterable
   {
     yield 'No variable' => [

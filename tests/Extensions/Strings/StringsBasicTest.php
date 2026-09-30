@@ -42,6 +42,9 @@ final class StringsBasicTest extends TestCase
     self::assertRenders($expectedClass, $environment, context: ['string' => $string]);
   }
 
+  /**
+   * @return iterable<string, array{ string, string, string }>
+   */
   public static function stringWrapperFilterDataProvider(): iterable
   {
     yield 'Unicode' => [UnicodeString::class, 'こんにちは', 'u'];
@@ -50,6 +53,9 @@ final class StringsBasicTest extends TestCase
     yield 'Autodetect Binary' => [\get_class(s(ByteString::class)), 'hello world', 's'];
   }
 
+  /**
+   * @param array<string, mixed> $context
+   */
   #[Test]
   #[DataProvider('usesAppLocaleDataProvider')]
   public function usesAppLocale(string $locale, ?string $defaultLocale, array $context): void
@@ -60,6 +66,9 @@ final class StringsBasicTest extends TestCase
     self::assertEquals($locale, $result, 'The locale should be loaded correctly.');
   }
 
+  /**
+   * @return iterable<string, array{ locale: string, defaultLocale: string|null, context: array<string, mixed> }>
+   */
   public static function usesAppLocaleDataProvider(): iterable
   {
     $locale = 'en_AU';
@@ -186,6 +195,16 @@ final class StringsBasicTest extends TestCase
     self::assertRenders($output, $environment, context: ['string' => $input]);
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expectedSeparator: string,
+   *   expectedLower: bool,
+   *   expectedUpper: bool,
+   *   expectedLocale: string,
+   *   twigParameters: string,
+   *   locale: string,
+   * }>
+   */
   public static function slugDataProvider(): iterable
   {
     yield 'Defaults' => [
@@ -252,6 +271,9 @@ final class StringsBasicTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, string: string, amount: int|string, ignoreEmptyLines?: bool }>
+   */
   public static function indentDataProvider(): iterable
   {
     yield 'Zero amount' => [
@@ -402,6 +424,9 @@ final class StringsBasicTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, string: string }>
+   */
   public static function outdentDataProvider(): iterable
   {
     yield 'No indentation' => [

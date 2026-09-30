@@ -30,6 +30,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function attrsDataProvider(): iterable
   {
     yield 'None' => [
@@ -66,6 +69,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function classesDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -87,6 +93,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function stylesheetDataProvider(): iterable
   {
     yield 'Basic' => [
@@ -112,6 +121,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function scriptDataProvider(): iterable
   {
     yield 'Basic' => [
@@ -137,6 +149,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function preloadLinksDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -207,6 +222,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string }>
+   */
   public static function srcsetDataProvider(): iterable
   {
     yield 'Empty' => [
@@ -254,6 +272,9 @@ final class HtmlFunctionsTest extends TestCase
     self::assertRenders($expected, $environment, context: $context);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, parameters: string, context?: array<string, mixed> }>
+   */
   public static function currentUrlAttrDataProvider(): iterable
   {
     yield 'Matching explicit' => [

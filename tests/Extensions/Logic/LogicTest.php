@@ -27,6 +27,9 @@ final class LogicTest extends TestCase
     self::assertRenders($expected, $environment, context: ['value' => $value]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, value: string, parameters: string }>
+   */
   public static function matchDataProvider(): iterable
   {
     $cases = <<<'TWIG'

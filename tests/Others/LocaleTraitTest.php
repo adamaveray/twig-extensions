@@ -37,6 +37,13 @@ final class LocaleTraitTest extends TestCase
     self::assertSame($expectedLocale, $instance->getLocale($context), 'The locale should be inferred correctly.');
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expectedLocale: string,
+   *   translatorOrLocale: string|TranslatorInterface|null,
+   *   context: array<string, mixed>,
+   * }>
+   */
   public static function localeInferenceDataProvider(): iterable
   {
     $app = new SymfonyAppVariable();

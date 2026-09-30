@@ -33,6 +33,9 @@ final class ValuesTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, value: string, parameters?: string }>
+   */
   public static function jsValueDataProvider(): iterable
   {
     yield 'String' => [
@@ -80,6 +83,9 @@ final class ValuesTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: bool, value: object, className: class-string }>
+   */
   public static function instanceOfDataProvider(): iterable
   {
     yield 'Match' => [

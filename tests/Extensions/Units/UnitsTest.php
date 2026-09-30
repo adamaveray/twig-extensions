@@ -39,6 +39,9 @@ final class UnitsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, amount: int|float, unit: string, parameters?: string }>
+   */
   public static function siAmountDataProvider(): iterable
   {
     yield 'Small amount (no prefix)' => [
@@ -176,6 +179,9 @@ final class UnitsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, bytes: int|float, parameters?: string }>
+   */
   public static function bytesDataProvider(): iterable
   {
     // Decimal system (default, 1000-based)

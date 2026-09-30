@@ -63,11 +63,15 @@ final class TwigEnvironmentTest extends TestCase
   #[Test]
   public function addBundles(): void
   {
-    $createMockBundle = function (array $extensions = []): ExtensionBundleInterface&MockObject {
-      $bundle = $this->createMock(ExtensionBundleInterface::class);
-      $bundle->expects($this->once())->method('getExtensions')->willReturn($extensions);
-      return $bundle;
-    };
+    $createMockBundle =
+      /**
+       * @param list<AbstractExtension> $extensions
+       */
+      function (array $extensions = []): ExtensionBundleInterface&MockObject {
+        $bundle = $this->createMock(ExtensionBundleInterface::class);
+        $bundle->expects($this->once())->method('getExtensions')->willReturn($extensions);
+        return $bundle;
+      };
 
     // Test adding single bundle
     $initialExtensions = [new class extends AbstractExtension {}, new class extends AbstractExtension {}];
@@ -206,6 +210,10 @@ final class TwigEnvironmentTest extends TestCase
     return new TwigEnvironment(new ArrayLoader([]));
   }
 
+  /**
+   * @param list<object> $needles
+   * @param array<array-key, object> $haystack
+   */
   private static function assertContainsAll(array $needles, array $haystack, string $message = ''): void
   {
     foreach ($needles as $needle) {

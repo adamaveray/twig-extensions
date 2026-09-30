@@ -35,6 +35,9 @@ final class PlaceholderStringsTest extends TestCase
     self::assertRenders(Generator::class, $environment, message: 'The correct generator instance should be loaded.');
   }
 
+  /**
+   * @return iterable<string, array{ string }>
+   */
   public static function generatorDataProvider(): iterable
   {
     yield 'Default locale' => [''];
@@ -60,6 +63,9 @@ final class PlaceholderStringsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expectedPattern: string, parameters: string }>
+   */
   public static function wordsDataProvider(): iterable
   {
     yield 'Single' => [
@@ -92,6 +98,9 @@ final class PlaceholderStringsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expectedPattern: string, parameters: string }>
+   */
   public static function sentencesDataProvider(): iterable
   {
     yield 'Single' => [
@@ -124,6 +133,9 @@ final class PlaceholderStringsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expectedPattern: string, parameters: string }>
+   */
   public static function paragraphsDataProvider(): iterable
   {
     yield 'Single' => [
@@ -156,6 +168,9 @@ final class PlaceholderStringsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expectedPattern: string, parameters: string }>
+   */
   public static function textDataProvider(): iterable
   {
     // Must have a minimum of 5 characters

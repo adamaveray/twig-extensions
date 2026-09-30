@@ -37,6 +37,9 @@ final class StringsCaseTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, input: string, parameters?: string, locale?: string }>
+   */
   public static function upperDataProvider(): iterable
   {
     yield 'All' => [
@@ -86,6 +89,9 @@ final class StringsCaseTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, input: string, parameters?: string, locale?: string }>
+   */
   public static function lowerDataProvider(): iterable
   {
     yield 'All' => [

@@ -18,6 +18,9 @@ use PHPUnit\Framework\Attributes\Test;
 #[CoversClass(ArrayAllOrAnyTest::class)]
 final class ArrayTestsTest extends TestCase
 {
+  /**
+   * @param array<array-key, string|null> $array
+   */
   #[Test]
   #[DataProvider('arraysDataProvider')]
   public function allEmptyTest(array $array): void
@@ -33,6 +36,9 @@ final class ArrayTestsTest extends TestCase
     );
   }
 
+  /**
+   * @param array<array-key, string|null> $array
+   */
   #[Test]
   #[DataProvider('arraysDataProvider')]
   public function anyEmptyTest(array $array): void
@@ -48,6 +54,9 @@ final class ArrayTestsTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ array<array-key, string|null> }>
+   */
   public static function arraysDataProvider(): iterable
   {
     yield 'Empty' => [[]];

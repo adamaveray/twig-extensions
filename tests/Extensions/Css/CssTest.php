@@ -31,6 +31,9 @@ final class CssTest extends TestCase
     self::assertRenders($expected, $environment, context: $context);
   }
 
+  /**
+   * @return iterable<int, array{ expected: string, template: string }>
+   */
   public static function cssStringDataProvider(): iterable
   {
     $sq = \htmlentities("'", \ENT_QUOTES);
@@ -53,6 +56,13 @@ final class CssTest extends TestCase
     self::assertRenders($expected, $environment, context: ['entries' => $entries, 'format' => $format]);
   }
 
+  /**
+   * @return iterable<string, array{
+   *   expected: string,
+   *   entries: array<string, string>|HasMediaDensities,
+   *   format?: string,
+   * }>
+   */
   public static function cssImageSetDataProvider(): iterable
   {
     yield 'Array' => [
@@ -110,6 +120,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  /**
+   * @param array<string, string> $properties
+   */
   #[Test]
   #[DataProvider('cssPropertiesDataProvider')]
   public function cssProperties(string $expected, array $properties): void
@@ -118,6 +131,9 @@ final class CssTest extends TestCase
     self::assertRenders($expected, $environment, context: ['properties' => $properties]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, properties: array<string, string> }>
+   */
   public static function cssPropertiesDataProvider(): iterable
   {
     yield 'None' => [
@@ -136,6 +152,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  /**
+   * @param string|list<string> $values
+   */
   #[Test]
   #[DataProvider('cssPropertyDataProvider')]
   public function cssProperty(string $expected, string $name, string|array $values): void
@@ -144,6 +163,9 @@ final class CssTest extends TestCase
     self::assertRenders($expected, $environment, context: ['name' => $name, 'values' => $values]);
   }
 
+  /**
+   * @return iterable<string, array{ expected: string, name: string, values: string|list<string> }>
+   */
   public static function cssPropertyDataProvider(): iterable
   {
     yield 'Single' => [
@@ -167,6 +189,9 @@ final class CssTest extends TestCase
     self::assertRenders($expected, $environment, context: ['url' => $url]);
   }
 
+  /**
+   * @return iterable<int, array{ expected: string, url: string }>
+   */
   public static function cssUrlDataProvider(): iterable
   {
     yield [

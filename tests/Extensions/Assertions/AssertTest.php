@@ -38,6 +38,9 @@ final class AssertTest extends TestCase
     self::assertEquals('Hello' . "\n" . 'world', $result);
   }
 
+  /**
+   * @return iterable<string, array{ string }>
+   */
   public static function assertTrueDataProvider(): iterable
   {
     yield 'True' => ['true'];
@@ -67,6 +70,9 @@ final class AssertTest extends TestCase
     );
   }
 
+  /**
+   * @return iterable<string, array{ string }>
+   */
   public static function assertFalseDataProvider(): iterable
   {
     yield 'False' => ['false'];
