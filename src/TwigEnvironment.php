@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Averay\TwigExtensions;
 
 use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
+use Averay\TwigExtensions\RuntimeLoaders\ExcludingRuntimeLoader;
 use Psr\Container\ContainerInterface;
 use Twig\Cache\CacheInterface;
 use Twig\Extension\ExtensionInterface;
@@ -20,6 +21,28 @@ use Twig\TwigTest;
 /**
  * @api
  *
+ * @psalm-type Options = array{
+ *   autoescape?: 'html'|'name'|false|(callable(string $templateName):('html'|'name'|false)),
+ *   auto_reload?: bool|null,
+ *   cache?: string|CacheInterface|false,
+ *   charset?: string,
+ *   container?: ContainerInterface,
+ *   container_excluded_runtimes?: list<class-string>,
+ *   debug?: bool,
+ *   optimizations?: -1|int-mask-of<OptimizerNodeVisitor::OPTIMIZE_*>,
+ *   strict_variables?: bool,
+ *   use_yield?: bool,
+ * }
+ * @psalm-type BaseOptions = array{
+ *   autoescape?: 'html'|'name'|false|(callable(string $templateName):('html'|'name'|false)),
+ *   auto_reload?: bool|null,
+ *   cache?: string|CacheInterface|false,
+ *   charset?: string,
+ *   debug?: bool,
+ *   optimizations?: -1|int-mask-of<OptimizerNodeVisitor::OPTIMIZE_*>,
+ *   strict_variables?: bool,
+ *   use_yield?: bool,
+ * }
  * @psalm-type IntlPrototypes = array{
  *   dateFormatter?: \IntlDateFormatter,
  *   numberFormatter?: \NumberFormatter,
@@ -28,33 +51,31 @@ use Twig\TwigTest;
 class TwigEnvironment extends \Twig\Environment
 {
   /**
-   * @param array{
-   *   autoescape?: 'html'|'name'|false|(callable(string $templateName):('html'|'name'|false)),
-   *   auto_reload?: bool|null,
-   *   cache?: string|CacheInterface|false,
-   *   charset?: string,
-   *   container?: ContainerInterface,
-   *   debug?: bool,
-   *   optimizations?: -1|int-mask-of<OptimizerNodeVisitor::OPTIMIZE_*>,
-   *   strict_variables?: bool,
-   *   use_yield?: bool,
-   * } $options
+   * @param Options $options
    */
   public function __construct(LoaderInterface $loader, array $options = [])
   {
-    $container = $options['container'] ?? null;
-    unset($options['container']);
+    ['base' => $baseOptions, 'custom' => $customOptions] = self::splitOptions($options);
 
-    parent::__construct($loader, ['strict_variables' => true, 'use_yield' => true, ...$options]);
+    parent::__construct($loader, ['strict_variables' => true, 'use_yield' => true, ...$baseOptions]);
 
+    // Handle custom options
+    ['container' => $container] = $customOptions;
     if ($container !== null) {
-      $this->addContainerLoader($container);
+      $this->addContainerLoader($container, $customOptions['container_excluded_runtimes'] ?? []);
     }
   }
 
-  public function addContainerLoader(ContainerInterface $container): void
+  /**
+   * @param list<class-string> $excludedRuntimes Runtime class names the container should not provide even if capable.
+   */
+  public function addContainerLoader(ContainerInterface $container, array $excludedRuntimes = []): void
   {
-    $this->addRuntimeLoader(new ContainerRuntimeLoader($container));
+    $loader = new ContainerRuntimeLoader($container);
+    if ($excludedRuntimes !== []) {
+      $loader = new ExcludingRuntimeLoader($loader, $excludedRuntimes);
+    }
+    $this->addRuntimeLoader($loader);
   }
 
   /**
@@ -151,5 +172,35 @@ class TwigEnvironment extends \Twig\Environment
     foreach ($globals as $name => $value) {
       $this->addGlobal($name, $value);
     }
+  }
+
+  /**
+   * @param Options $options
+   *
+   * @return array{
+   *   base: BaseOptions,
+   *   custom: array{
+   *     container: ContainerInterface|null,
+   *     container_excluded_runtimes: list<class-string>|null,
+   *   },
+   * }
+   */
+  private static function splitOptions(array $options): array
+  {
+    /** @var BaseOptions $baseOptions */
+    $baseOptions = \array_diff_key($options, \array_flip(['container', 'container_excluded_runtimes']));
+    $customOptions = [
+      'container' => $options['container'] ?? null,
+      'container_excluded_runtimes' => $options['container_excluded_runtimes'] ?? null,
+    ];
+
+    if ($customOptions['container_excluded_runtimes'] !== null && $customOptions['container'] === null) {
+      throw new \InvalidArgumentException('The "container_excluded_runtimes" option requires the "container" option.');
+    }
+
+    return [
+      'base' => $baseOptions,
+      'custom' => $customOptions,
+    ];
   }
 }
