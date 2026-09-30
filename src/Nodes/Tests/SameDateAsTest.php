@@ -82,6 +82,8 @@ final class SameDateAsTest extends TestExpression
     ?Node $timezoneNode,
     \DateTimeZone $defaultTimezone,
   ): void {
+    $datetimeVarName = null;
+
     // Convert to immutable
     self::compileToVariable($compiler, $datetimeVarName, static fn() => $compiler
       ->raw('\\DateTimeImmutable::createFromInterface(')

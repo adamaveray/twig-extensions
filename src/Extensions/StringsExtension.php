@@ -50,6 +50,7 @@ final class StringsExtension extends AbstractExtension
         'is_safe' => ['html'],
       ]), // For compatibility with Twig documentation
 
+      new TwigFilter('indent', self::filterIndent(...)),
       new TwigFilter('outdent', self::filterOutdent(...)),
     ];
   }
@@ -132,6 +133,27 @@ final class StringsExtension extends AbstractExtension
       $string = self::stripIndentation($string);
     }
     return $converter->convert($string);
+  }
+
+  private static function filterIndent(string $string, int|string $amount, bool $ignore_empty_lines = true): string
+  {
+    if (\is_int($amount)) {
+      if ($amount < 0) {
+        throw new \InvalidArgumentException('Amount must not be negative.');
+      }
+      $indentation = \str_repeat(' ', $amount);
+    } else {
+      $indentation = $amount;
+    }
+    // Prepend indentation
+    $string = \preg_replace($ignore_empty_lines ? '~^(?!$)~m' : '~^~m', $indentation, $string);
+    if (!\is_string($string)) {
+      // @codeCoverageIgnoreStart
+      throw new \UnexpectedValueException('Failed applying indentation.');
+
+      // @codeCoverageIgnoreEnd
+    }
+    return $string;
   }
 
   private static function filterOutdent(string $string): string

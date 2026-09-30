@@ -235,6 +235,161 @@ final class StringsBasicTest extends TestCase
   }
 
   #[Test]
+  #[DataProvider('indentDataProvider')]
+  public function indent(string $expected, string $string, int|string $amount, ?bool $ignoreEmptyLines = null): void
+  {
+    $arguments = $ignoreEmptyLines === null ? 'amount' : 'amount, ignore_empty_lines: ignore_empty_lines';
+    $environment = self::makeEnvironment('{{- string | indent(' . $arguments . ') -}}', [new StringsExtension()]);
+
+    self::assertEquals(
+      $expected,
+      $environment->render('template', [
+        'string' => $string,
+        'amount' => $amount,
+        'ignore_empty_lines' => $ignoreEmptyLines,
+      ]),
+      'The indentation should be applied correctly.',
+    );
+  }
+
+  public static function indentDataProvider(): iterable
+  {
+    yield 'Zero amount' => [
+      'expected' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'string' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'amount' => 0,
+    ];
+
+    yield 'Empty indentation' => [
+      'expected' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'string' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'amount' => '',
+    ];
+
+    yield 'Single line with amount' => [
+      'expected' => '    Hello world.',
+      'string' => 'Hello world.',
+      'amount' => 4,
+    ];
+
+    yield 'Multiple lines with amount' => [
+      'expected' => <<<'TXT'
+          Hello world.
+          Lorem ipsum.
+        TXT,
+      'string' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'amount' => 2,
+    ];
+
+    yield 'Multiple lines with existing indentation' => [
+      'expected' => <<<'TXT'
+          Hello world.
+            An indented line.
+          Lorem ipsum.
+        TXT,
+      'string' => <<<'TXT'
+        Hello world.
+          An indented line.
+        Lorem ipsum.
+        TXT,
+      'amount' => 2,
+    ];
+
+    yield 'Custom indentation whitespace' => [
+      'expected' => "\tHello world.\n\tLorem ipsum.",
+      'string' => "Hello world.\nLorem ipsum.",
+      'amount' => "\t",
+    ];
+
+    yield 'Custom indentation text' => [
+      'expected' => <<<'TXT'
+        ::Hello world.
+        ::Lorem ipsum.
+        TXT,
+      'string' => <<<'TXT'
+        Hello world.
+        Lorem ipsum.
+        TXT,
+      'amount' => '::',
+    ];
+
+    yield 'Numeric indentation' => [
+      'expected' => "2Hello world.\n2Lorem ipsum.",
+      'string' => "Hello world.\nLorem ipsum.",
+      'amount' => '2',
+    ];
+
+    yield 'Empty lines ignored by default' => [
+      'expected' => "  Hello world.\n\n  Lorem ipsum.\n",
+      'string' => "Hello world.\n\nLorem ipsum.\n",
+      'amount' => 2,
+    ];
+
+    yield 'Empty lines ignored explicitly' => [
+      'expected' => "  Hello world.\n\n  Lorem ipsum.\n",
+      'string' => "Hello world.\n\nLorem ipsum.\n",
+      'amount' => 2,
+      'ignoreEmptyLines' => true,
+    ];
+
+    yield 'Empty lines indented' => [
+      'expected' => "  Hello world.\n  \n  Lorem ipsum.\n",
+      'string' => "Hello world.\n\nLorem ipsum.\n",
+      'amount' => 2,
+      'ignoreEmptyLines' => false,
+    ];
+
+    yield 'Whitespace-only lines indented when ignoring empty lines' => [
+      'expected' => "  Hello world.\n   \n  Lorem ipsum.",
+      'string' => "Hello world.\n \nLorem ipsum.",
+      'amount' => 2,
+      'ignoreEmptyLines' => true,
+    ];
+
+    yield 'Empty string ignored' => [
+      'expected' => '',
+      'string' => '',
+      'amount' => 2,
+    ];
+
+    yield 'Empty string indented' => [
+      'expected' => '  ',
+      'string' => '',
+      'amount' => 2,
+      'ignoreEmptyLines' => false,
+    ];
+  }
+
+  #[Test]
+  public function indentRejectsNegativeIndentation(): void
+  {
+    $environment = self::makeEnvironment('{{- string | indent(amount) -}}', [new StringsExtension()]);
+
+    $this->expectException(\Twig\Error\RuntimeError::class);
+    $this->expectExceptionMessageIsOrContains('Amount must not be negative.');
+
+    $environment->render('template', [
+      'string' => 'Hello world',
+      'amount' => -1,
+    ]);
+  }
+
+  #[Test]
   #[DataProvider('outdentDataProvider')]
   public function outdent(string $expected, string $string): void
   {
