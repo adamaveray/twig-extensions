@@ -1,5 +1,6 @@
 {
   "name": "averay/twig-extensions",
+  "description": "A collection of Twig extensions to improve template authoring.",
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/adamaveray/twig-extensions",
