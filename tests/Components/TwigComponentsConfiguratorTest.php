@@ -244,6 +244,20 @@ final class TwigComponentsConfiguratorTest extends TestCase
     );
   }
 
+  #[Test]
+  public function providesRuntimeClasses(): void
+  {
+    $environment = self::makeComponentsEnvironment(self::makeConfigurator(), []);
+
+    foreach (TwigComponentsConfigurator::RUNTIME_CLASSES as $runtimeClass) {
+      self::assertInstanceOf(
+        $runtimeClass,
+        $environment->getRuntime($runtimeClass),
+        'Each listed runtime class should be provided by the configured environment.',
+      );
+    }
+  }
+
   /**
    * @param string|list<string> $anonymousTemplateDirectory
    */

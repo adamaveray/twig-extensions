@@ -42,6 +42,13 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
  */
 final readonly class TwigComponentsConfigurator
 {
+  /**
+   * The runtime classes provided to configured environments.
+   *
+   * @var list<class-string>
+   */
+  public const array RUNTIME_CLASSES = [ComponentRuntime::class];
+
   private const string REGISTRY_CACHE_KEY_PREFIX = 'twig_components.registry.';
 
   /** Must be incremented whenever the structure of the cached component registry changes. */
