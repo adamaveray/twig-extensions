@@ -22,6 +22,9 @@ final class DefaultBundle extends AbstractBundle
       // Twig-provided
       new CacheExtension(),
 
+      // Twig overrides
+      new Extensions\TwigOverridesExtension(),
+
       // Custom
       new Extensions\ArraysExtension(),
       new Extensions\AssertionsExtension(),
