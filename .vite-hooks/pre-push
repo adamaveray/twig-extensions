@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+vp run lint
+vp run test

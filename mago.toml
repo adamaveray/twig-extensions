@@ -1,0 +1,8 @@
+extends = "node_modules/@averay/codeformat/mago.base.toml"
+
+[source]
+excludes = ["node_modules/**"]
+paths = ["."]
+
+[formatter]
+sort-class-methods = false

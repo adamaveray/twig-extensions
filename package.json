@@ -2,17 +2,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "format": "bun --bun x prettier --write '**/*.{php,md,json}'",
-    "lint": "bun run lint:prettier && bun run lint:psalm",
-    "lint:prettier": "bun --bun x prettier --check '**/*.{php,md,json}'",
-    "lint:psalm": "php ./vendor/bin/psalm --no-cache",
-    "prepare": "husky",
+    "format": "vp exec codeformat fix",
+    "lint": "vp exec codeformat check",
     "test": "php ./vendor/bin/phpunit"
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.25.0",
-    "@prettier/plugin-xml": "^3.4.2",
-    "husky": "^9.1.7",
-    "prettier": "^3.8.3"
+    "@averay/codeformat": "^0.4.5",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.0.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.8.1",
+      "onFail": "download"
+    }
   }
 }

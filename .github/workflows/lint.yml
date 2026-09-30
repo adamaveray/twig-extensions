@@ -22,8 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Use Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Use Vite+
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
 
       - name: Use PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
@@ -31,17 +33,6 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring
         env: { fail-fast: true }
-
-      - name: Cache NPM packages
-        uses: actions/cache@v4
-        env: { cache-name: npm }
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-lint-${{ env.cache-name }}-
-            ${{ runner.os }}-lint-
-            ${{ runner.os }}-
 
       - name: Cache Composer packages
         uses: actions/cache@v4
@@ -54,11 +45,8 @@ jobs:
             ${{ runner.os }}-lint-
             ${{ runner.os }}-
 
-      - name: Install NPM dependencies
-        run: bun install --frozen-lockfile
-
       - name: Install Composer dependencies
         run: composer install --ignore-platform-reqs
 
       - name: Lint code
-        run: bun run lint
+        run: vp run lint

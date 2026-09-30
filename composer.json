@@ -18,7 +18,10 @@
   "autoload-dev": {
     "psr-4": {
       "Averay\\TwigExtensions\\Tests\\": "tests/"
-    }
+    },
+    "files": [
+      "node_modules/@averay/codeformat/autoload.php"
+    ]
   },
   "require": {
     "php": ">=8.4",
@@ -41,9 +44,10 @@
   },
   "require-dev": {
     "ext-simplexml": "*",
+    "carthage-software/mago": "^1.50",
+    "friendsofphp/php-cs-fixer": "^3.95",
     "phpunit/phpunit": "^13.1",
     "roave/security-advisories": "dev-latest",
-    "symfony/http-foundation": "^8.0",
-    "vimeo/psalm": "^6.16"
+    "symfony/http-foundation": "^8.0"
   }
 }
