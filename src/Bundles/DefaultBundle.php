@@ -42,7 +42,7 @@ final class DefaultBundle extends AbstractBundle
   }
 
   /**
-   * @see DevelopmentExtension
+   * @see DevelopmentBundle
    */
   public function withDevelopment(
     ?Stopwatch $stopwatch,
@@ -50,7 +50,7 @@ final class DefaultBundle extends AbstractBundle
     ?TemplateDumperInterface $templateDumper = null,
     ?Stopwatch $profileStopwatch = null,
   ): self {
-    return $this->withBundle(new DevelopmentExtension($stopwatch, $profile, $templateDumper, $profileStopwatch));
+    return $this->withBundle(new DevelopmentBundle($stopwatch, $profile, $templateDumper, $profileStopwatch));
   }
 
   /**

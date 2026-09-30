@@ -10,7 +10,7 @@ use Symfony\Bridge\Twig\Extension as SymfonyExtensions;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Twig\Profiler\Profile;
 
-final class DevelopmentExtension extends AbstractBundle
+final class DevelopmentBundle extends AbstractBundle
 {
   public function __construct(
     ?Stopwatch $stopwatch,
