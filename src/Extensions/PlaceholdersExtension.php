@@ -14,6 +14,9 @@ use Twig\Extension\AbstractExtension;
 use Twig\TemplateWrapper;
 use Twig\TwigFunction;
 
+/**
+ * @psalm-type Color = array{ r: int, g: int, b: int }
+ */
 final class PlaceholdersExtension extends AbstractExtension
 {
   use WithLocale;
@@ -125,8 +128,6 @@ final class PlaceholdersExtension extends AbstractExtension
   }
 
   /**
-   * @psalm-type Color = array{ r: int, g: int, b: int }
-   *
    * @param positive-int $count How many colours to generate.
    * @param positive-int $distance How far from the internal seed colour each colour can be.
    *

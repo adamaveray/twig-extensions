@@ -6,6 +6,9 @@ namespace Averay\TwigExtensions\Extensions\Traits;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 trait WithLocale
 {
   use WithSymfonyApp;
@@ -13,13 +16,14 @@ trait WithLocale
   final public const string CONTEXT_VALUE_LOCALE = 'locale';
 
   /** @var callable():(string|null)|null */
-  protected mixed $localeProvider;
+  protected mixed $localeProvider = null;
 
   final protected function setLocaleProvider(string|TranslatorInterface|null $translatorOrLocale): void
   {
     $this->localeProvider = match (true) {
       \is_string($translatorOrLocale) => static fn(): string => $translatorOrLocale,
       $translatorOrLocale instanceof TranslatorInterface => $translatorOrLocale->getLocale(...),
+      // @mago-expect analysis:redundant-comparison (ensures exhaustive matching)
       $translatorOrLocale === null => null,
     };
   }
@@ -31,6 +35,7 @@ trait WithLocale
   {
     $app = self::getAppVariableFromContext($context);
     if ($app !== null) {
+      // @mago-expect lint:no-empty-catch-clause
       try {
         return $app->getLocale();
       } catch (\RuntimeException) {

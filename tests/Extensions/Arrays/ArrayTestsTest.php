@@ -24,6 +24,7 @@ final class ArrayTestsTest extends TestCase
   {
     $environment = self::makeEnvironment('{{- array is all_empty ? "yes" : "no" -}}', [new ArraysExtension()]);
 
+    // @mago-expect lint:no-empty
     self::assertRenders(
       \array_all($array, static fn(mixed $value): bool => empty($value)) ? 'yes' : 'no',
       $environment,
@@ -38,6 +39,7 @@ final class ArrayTestsTest extends TestCase
   {
     $environment = self::makeEnvironment('{{- array is any_empty ? "yes" : "no" -}}', [new ArraysExtension()]);
 
+    // @mago-expect lint:no-empty
     self::assertRenders(
       \array_any($array, static fn(mixed $value): bool => empty($value)) ? 'yes' : 'no',
       $environment,

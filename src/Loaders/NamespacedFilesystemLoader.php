@@ -6,6 +6,9 @@ namespace Averay\TwigExtensions\Loaders;
 
 use Twig\Loader\FilesystemLoader;
 
+/**
+ * @api
+ */
 class NamespacedFilesystemLoader extends FilesystemLoader
 {
   /**

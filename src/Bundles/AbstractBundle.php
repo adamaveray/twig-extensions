@@ -6,6 +6,9 @@ namespace Averay\TwigExtensions\Bundles;
 
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @api
+ */
 abstract class AbstractBundle implements ExtensionBundleInterface
 {
   /** @var list<ExtensionInterface> */

@@ -7,6 +7,9 @@ namespace Averay\TwigExtensions\Tests\Resources;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @internal
+ */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
   /**
@@ -36,6 +39,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     self::fail($message);
   }
 
+  /**
+   * @param array<string, mixed> $context
+   */
   final protected static function assertRenders(
     string $expected,
     Environment $environment,
@@ -47,6 +53,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     self::assertSame($expected, $output, $message);
   }
 
+  /**
+   * @param list<ExtensionInterface> $extensions
+   * @param array<string, mixed> $context
+   */
   final protected static function assertFilterRenders(
     string $expected,
     mixed $value,
@@ -62,6 +72,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     self::assertRenders($expected, $environment, context: ['test_value' => $value] + $context, message: $message);
   }
 
+  /**
+   * @param list<ExtensionInterface> $extensions
+   * @param array<string, mixed> $context
+   */
   final protected static function assertMatchesTest(
     bool $expected,
     string $statement,
@@ -82,9 +96,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
   }
 
   /**
-   * @param array<string, string> $templates
+   * @param string|array<string, string> $templates
    * @param list<ExtensionInterface> $extensions
    * @param array<string, object> $runtimeResources
+   * @param array<string, mixed> $options
    */
   final protected static function makeEnvironment(
     array|string $templates = [],

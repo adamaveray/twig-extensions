@@ -37,7 +37,10 @@ final class ArraysExtension extends AbstractExtension
   /**
    * An enhanced version of the inbuilt Twig sort filter, allowing ignoring associations or sorting by either values or keys while remaining compatible with the original.
    *
+   * @param array<array-key, mixed>|\Traversable<array-key, mixed> $array
    * @param callable(mixed, mixed):int $arrow
+   *
+   * @return array<array-key, mixed>
    */
   private static function filterSort(
     array|\Traversable $array,
@@ -87,6 +90,11 @@ final class ArraysExtension extends AbstractExtension
     return $array;
   }
 
+  /**
+   * @param array<array-key, mixed> $array
+   *
+   * @return array<array-key, mixed>
+   */
   private static function filterAppend(array $array, mixed ...$values): array
   {
     return [...$array, ...$values];

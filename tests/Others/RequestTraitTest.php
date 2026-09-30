@@ -6,6 +6,7 @@ namespace Averay\TwigExtensions\Tests\Others;
 
 use Averay\TwigExtensions\Extensions\Traits\WithRequest;
 use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
+use Averay\TwigExtensions\Tests\Resources\RequestTraitHost;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use League\Uri\Contracts\UriInterface as LeagueUriInterface;
 use PHPUnit\Framework\Attributes\CoversTrait;
@@ -30,7 +31,7 @@ final class RequestTraitTest extends TestCase
   #[DataProvider('requestInferenceDataProvider')]
   public function requestInference(mixed $expected, array $context): void
   {
-    $instance = self::makeTraitInstance();
+    $instance = new RequestTraitHost();
     self::assertSame($expected, $instance->getRequest($context), 'The request should be inferred correctly.');
   }
 
@@ -71,7 +72,7 @@ final class RequestTraitTest extends TestCase
   #[DataProvider('requestUriInferenceDataProvider')]
   public function requestUriInference(string $expected, array $context): void
   {
-    $instance = self::makeTraitInstance();
+    $instance = new RequestTraitHost();
     self::assertSame($expected, $instance->getRequestUri($context), 'The request URI should be inferred correctly.');
   }
 
@@ -127,7 +128,7 @@ final class RequestTraitTest extends TestCase
   #[Test]
   public function requestUriInferenceFailsWhenNoApp(): void
   {
-    $instance = self::makeTraitInstance();
+    $instance = new RequestTraitHost();
     $this->expectException(\RuntimeException::class);
     $instance->getRequestUri([]);
   }
@@ -135,26 +136,8 @@ final class RequestTraitTest extends TestCase
   #[Test]
   public function requestUriInferenceFailsWhenIncompatibleApp(): void
   {
-    $instance = self::makeTraitInstance();
+    $instance = new RequestTraitHost();
     $this->expectException(\RuntimeException::class);
     $instance->getRequestUri(['app' => new \stdClass()]);
-  }
-
-  private static function makeTraitInstance(): object
-  {
-    return new class {
-      use WithRequest;
-      use WithSymfonyApp;
-
-      public function getRequest(array $context): mixed
-      {
-        return self::inferRequest($context);
-      }
-
-      public function getRequestUri(array $context): string
-      {
-        return self::inferRequestUri($context);
-      }
-    };
   }
 }

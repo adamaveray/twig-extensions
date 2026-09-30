@@ -20,6 +20,9 @@ use Twig\Extension\ExtensionInterface;
 #[CoversClass(CssExtension::class)]
 final class CssTest extends TestCase
 {
+  /**
+   * @param array<string, mixed> $context
+   */
   #[Test]
   #[DataProvider('cssStringDataProvider')]
   public function cssString(string $expected, string $template, array $context = []): void
@@ -63,12 +66,18 @@ final class CssTest extends TestCase
     ];
 
     $object = new class implements HasMediaDensities {
+      /**
+       * @return list<string>
+       */
       #[\Override]
       public function getImageFormats(): array
       {
         return ['image/webp', 'image/jpeg'];
       }
 
+      /**
+       * @return non-empty-list<array{ density: int, url: string }>
+       */
       #[\Override]
       public function getDensitiesForFormat(string $format): array
       {
@@ -170,6 +179,7 @@ final class CssTest extends TestCase
    * @param string|array<string, string> $templates
    * @param list<ExtensionInterface> $extensions
    * @param array<string, object> $runtimeResources
+   * @param array<string, mixed> $options
    */
   private static function makeCssEnvironment(
     string|array $templates,

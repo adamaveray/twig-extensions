@@ -43,6 +43,7 @@ final class ArraySortTest extends TestCase
 
     // Default
     yield 'List, default' => [
+      // @mago-expect lint:sorted-integer-keys
       'expected' => [
         1 => 'a',
         2 => 'b',
@@ -91,6 +92,7 @@ final class ArraySortTest extends TestCase
     ];
 
     yield 'List, default, custom' => [
+      // @mago-expect lint:sorted-integer-keys
       'expected' => [
         2 => 'b1',
         0 => 'c12',
@@ -139,6 +141,7 @@ final class ArraySortTest extends TestCase
     ];
 
     yield 'Iterator, default' => [
+      // @mago-expect lint:sorted-integer-keys
       'expected' => [
         1 => 'a',
         2 => 'b',

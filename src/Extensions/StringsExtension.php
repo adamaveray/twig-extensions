@@ -69,10 +69,11 @@ final class StringsExtension extends AbstractExtension
     $string = u($string);
     return match ($target) {
       'all' => $string->localeLower($locale),
-      'words' => $string->replaceMatches('~\\b\\w~', static function (array $matches) use ($locale): string {
-        /** @var array{ string } $matches */
-        return u($matches[0])->localeLower($locale)->toString();
-      }),
+      'words' => $string->replaceMatches(
+        '~\\b\\w~',
+        /** @param array{ string } $matches */
+        static fn(array $matches): string => u($matches[0])->localeLower($locale)->toString(),
+      ),
       'first' => $string->slice(0, 1)->localeLower($locale)->toString() . $string->slice(1)->toString(),
       default => throw new \OutOfBoundsException(\sprintf('Unknown case transformation target "%s".', $target)),
     };
@@ -92,9 +93,11 @@ final class StringsExtension extends AbstractExtension
     $string = u($string);
     return match ($target) {
       'all' => $string->localeUpper($locale),
-      'words' => $string->replaceMatches('~\\b\\w~', static function (array $matches) use ($locale): string {
-        /** @var array{ string } $matches */ return u($matches[0])->localeUpper($locale)->toString();
-      }),
+      'words' => $string->replaceMatches(
+        '~\\b\\w~',
+        /** @param array{ string } $matches */
+        static fn(array $matches): string => u($matches[0])->localeUpper($locale)->toString(),
+      ),
       'first' => $string->slice(0, 1)->localeUpper($locale)->toString() . $string->slice(1)->toString(),
       default => throw new \OutOfBoundsException(\sprintf('Unknown case transformation target "%s".', $target)),
     };
@@ -110,7 +113,7 @@ final class StringsExtension extends AbstractExtension
     string $separator = '-',
     ?string $case = 'lower',
     ?string $locale = null,
-  ): string|\Stringable {
+  ): \Stringable {
     $locale ??= $this->inferLocale($context);
 
     $slugger = $environment->getRuntime(SluggerInterface::class);
@@ -127,7 +130,7 @@ final class StringsExtension extends AbstractExtension
     Environment $environment,
     string $string,
     bool $ignore_indentation = false,
-  ): string|\Stringable {
+  ): \Stringable {
     $converter = $environment->getRuntime(MarkdownConverterInterface::class);
     if ($ignore_indentation) {
       $string = self::stripIndentation($string);
@@ -164,7 +167,7 @@ final class StringsExtension extends AbstractExtension
   private static function stripIndentation(string $string): string
   {
     $indentation = \substr($string, 0, \strspn($string, " \t\r\n\0\x0B"));
-    if (!empty($indentation)) {
+    if ($indentation !== '') {
       // Remove indentation
       $string = \preg_replace('~^' . \preg_quote($indentation, '~') . '~m', '', $string);
       if (!\is_string($string)) {

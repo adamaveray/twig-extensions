@@ -343,6 +343,7 @@ final class HtmlFiltersTest extends TestCase
    * @param string|array<string, string> $templates
    * @param list<ExtensionInterface> $extensions
    * @param array<string, object> $runtimeResources
+   * @param array<string, mixed> $options
    */
   private static function makeHtmlEnvironment(
     string|array $templates,

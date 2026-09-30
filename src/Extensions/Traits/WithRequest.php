@@ -7,11 +7,19 @@ namespace Averay\TwigExtensions\Extensions\Traits;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+/**
+ * @internal
+ */
 trait WithRequest
 {
+  use WithSymfonyApp;
+
   final public const string CONTEXT_VALUE_REQUEST = 'request';
   final public const string CONTEXT_VALUE_REQUEST_URI = 'request_uri';
 
+  /**
+   * @param array<string, mixed> $context
+   */
   final protected static function inferRequest(array $context): PsrServerRequestInterface|SymfonyRequest|null
   {
     // Symfony app

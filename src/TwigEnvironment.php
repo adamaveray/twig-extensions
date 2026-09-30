@@ -18,6 +18,8 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 
 /**
+ * @api
+ *
  * @psalm-type IntlPrototypes = array{
  *   dateFormatter?: \IntlDateFormatter,
  *   numberFormatter?: \NumberFormatter,
@@ -40,12 +42,10 @@ class TwigEnvironment extends \Twig\Environment
    */
   public function __construct(LoaderInterface $loader, array $options = [])
   {
-    $options = ['container' => null, 'strict_variables' => true, 'use_yield' => true, ...$options];
-
-    $container = $options['container'];
+    $container = $options['container'] ?? null;
     unset($options['container']);
 
-    parent::__construct($loader, $options);
+    parent::__construct($loader, ['strict_variables' => true, 'use_yield' => true, ...$options]);
 
     if ($container !== null) {
       $this->addContainerLoader($container);

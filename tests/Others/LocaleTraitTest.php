@@ -6,6 +6,7 @@ namespace Averay\TwigExtensions\Tests\Others;
 
 use Averay\TwigExtensions\Extensions\Traits\WithLocale;
 use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
+use Averay\TwigExtensions\Tests\Resources\LocaleTraitHost;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,6 +23,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[CoversTrait(WithSymfonyApp::class)]
 final class LocaleTraitTest extends TestCase
 {
+  /**
+   * @param array<string, mixed> $context
+   */
   #[Test]
   #[DataProvider('localeInferenceDataProvider')]
   public function localeInference(
@@ -29,7 +33,7 @@ final class LocaleTraitTest extends TestCase
     string|TranslatorInterface|null $translatorOrLocale,
     array $context,
   ): void {
-    $instance = self::makeTraitInstance($translatorOrLocale);
+    $instance = new LocaleTraitHost($translatorOrLocale);
     self::assertSame($expectedLocale, $instance->getLocale($context), 'The locale should be inferred correctly.');
   }
 
@@ -75,25 +79,8 @@ final class LocaleTraitTest extends TestCase
   #[Test]
   public function localeInferenceFailsWhenNoLocale(): void
   {
-    $instance = self::makeTraitInstance(null);
+    $instance = new LocaleTraitHost(null);
     $this->expectException(\RuntimeException::class);
     $instance->getLocale([]);
-  }
-
-  private static function makeTraitInstance(string|TranslatorInterface|null $translatorOrLocale): object
-  {
-    return new class($translatorOrLocale) {
-      use WithLocale;
-
-      public function __construct(string|TranslatorInterface|null $translatorOrLocale)
-      {
-        $this->setLocaleProvider($translatorOrLocale);
-      }
-
-      public function getLocale(array $context): string
-      {
-        return $this->inferLocale($context);
-      }
-    };
   }
 }

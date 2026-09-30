@@ -19,16 +19,20 @@ use Twig\Error\SyntaxError;
 #[CoversClass(SameDateAsTest::class)]
 final class DatesTest extends TestCase
 {
-  private static function getTestDate(): \DateTimeInterface
+  private static function getTestDate(): \DateTimeImmutable
   {
     return new \DateTimeImmutable('2000-01-01T00:00:00Z', new \DateTimeZone('UTC'));
   }
 
-  private static function getTestDateAlternateTimezone(): \DateTimeInterface
+  private static function getTestDateAlternateTimezone(): \DateTimeImmutable
   {
     return self::getTestDate()->setTimezone(new \DateTimeZone('Australia/Brisbane'));
   }
 
+  /**
+   * @param string|list<string> $statements
+   * @param array<string, mixed> $context
+   */
   #[Test]
   #[DataProvider('isSameDateDataProvider')]
   public function isSameDate(bool $expected, string|array $statements, array $context): void

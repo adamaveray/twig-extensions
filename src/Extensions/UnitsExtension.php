@@ -118,6 +118,8 @@ final class UnitsExtension extends AbstractExtension
   /**
    * Validates parameters for SI amount calculation.
    *
+   * @param array<array-key, mixed> $precision
+   *
    * @psalm-assert non-empty-array<string, non-negative-int> $precision
    * @psalm-assert non-negative-int $prefixStepPercentage
    *
@@ -132,7 +134,7 @@ final class UnitsExtension extends AbstractExtension
       throw new \InvalidArgumentException('Step must be a positive number.');
     }
 
-    if (empty($precision)) {
+    if ($precision === []) {
       throw new \InvalidArgumentException('Precision array cannot be empty.');
     }
     foreach ($precision as $prefix => $decimals) {
@@ -181,7 +183,7 @@ final class UnitsExtension extends AbstractExtension
     }
 
     $prefixIndex = 0;
-    $matchedPrecision = \current($precision);
+    $matchedPrecision = \array_first($precision);
     $matchedPrefix = self::getSiPrefix($prefixIndex);
     $maximumPrefixIndex = \count(self::SI_PREFIXES) - 1;
     while (($amount / $step) >= $prefixStepPercentage && $prefixIndex < $maximumPrefixIndex) {

@@ -15,6 +15,8 @@ use Twig\TwigTest;
  * @internal
  *
  * @coversNothing
+ *
+ * @psalm-type Fn = callable(Compiler $compiler):(mixed|void)
  */
 final class SameDateAsTest extends TestExpression
 {
@@ -40,7 +42,10 @@ final class SameDateAsTest extends TestExpression
 
   private function getTestName(): string
   {
-    \assert(\is_array($this->attributes) && isset($this->attributes['name']) && \is_string($this->attributes['name']));
+    \assert(
+      \is_array($this->attributes) && isset($this->attributes['name']) && \is_string($this->attributes['name']),
+      'The node must have a valid `name` attribute.',
+    );
     return $this->attributes['name'];
   }
 
@@ -85,7 +90,7 @@ final class SameDateAsTest extends TestExpression
     $datetimeVarName = null;
 
     // Convert to immutable
-    self::compileToVariable($compiler, $datetimeVarName, static fn() => $compiler
+    self::compileToVariable($compiler, $datetimeVarName, static fn(): Compiler => $compiler
       ->raw('\\DateTimeImmutable::createFromInterface(')
       ->subcompile($node)
       ->raw(')'));
@@ -99,27 +104,32 @@ final class SameDateAsTest extends TestExpression
       self::compileTernary(
         $compiler,
         // If is DateTimeZone instance...
-        if: static fn() => self::compileToVariable($compiler, $timezoneVarName, static fn() => $compiler->subcompile(
-          $timezoneNode,
-        ))->raw(' instanceof \\DateTimeZone'),
+        if: static fn(): Compiler => self::compileToVariable(
+          $compiler,
+          $timezoneVarName,
+          static fn(): Compiler => $compiler->subcompile($timezoneNode),
+        )->raw(' instanceof \\DateTimeZone'),
         // ...then use value
-        then: static fn() => $compiler->raw('$' . $timezoneVarName),
+        then: static fn(): Compiler => $compiler->raw('$' . $timezoneVarName),
         // ...else
-        else: static fn() => self::compileTernary(
+        else: static fn(): Compiler => self::compileTernary(
           $compiler,
           // If is string
-          if: static fn() => $compiler->raw('\\is_string($' . $timezoneVarName . ')'),
+          if: static fn(): Compiler => $compiler->raw('\\is_string($' . $timezoneVarName . ')'),
           // ...then use as DateTimeZone name
-          then: static fn() => $compiler->raw('new \\DateTimeZone($' . $timezoneVarName . ')'),
+          then: static fn(): Compiler => $compiler->raw('new \\DateTimeZone($' . $timezoneVarName . ')'),
           // ...else
-          else: static fn() => self::compileTernary(
+          else: static fn(): Compiler => self::compileTernary(
             $compiler,
             // If is false
-            if: static fn() => $compiler->raw('$' . $timezoneVarName . ' === false'),
+            if: static fn(): Compiler => $compiler->raw('$' . $timezoneVarName . ' === false'),
             // ...then preserve current time zone
-            then: static fn() => $compiler->raw('$' . $datetimeVarName . '->getTimezone()'),
+            then: static fn(): Compiler => $compiler->raw('$' . $datetimeVarName . '->getTimezone()'),
             // ...else use default time zone
-            else: static fn() => $compiler->raw('new \\DateTimeZone(')->string($defaultTimezone->getName())->raw(')'),
+            else: static fn(): Compiler => $compiler
+              ->raw('new \\DateTimeZone(')
+              ->string($defaultTimezone->getName())
+              ->raw(')'),
           ),
         ),
       );
@@ -154,8 +164,6 @@ final class SameDateAsTest extends TestExpression
   }
 
   /**
-   * @psalm-type Fn = callable(Compiler $compiler):(mixed|void)
-   *
    * @param Fn $if
    * @param Fn $then
    * @param Fn $else

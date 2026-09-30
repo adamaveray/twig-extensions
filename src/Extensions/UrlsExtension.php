@@ -13,6 +13,7 @@ use function Symfony\Component\String\u;
 final class UrlsExtension extends AbstractExtension
 {
   private const string URL_WWW_PREFIX = 'www.';
+  /** @var array<string, int<0, 7>> */
   private const array URL_PARTS_MAP = [
     'scheme' => \PHP_URL_SCHEME,
     'host' => \PHP_URL_HOST,
@@ -44,6 +45,9 @@ final class UrlsExtension extends AbstractExtension
       ));
 
     $result = \parse_url($url, $component);
+    if ($result === false) {
+      throw new \InvalidArgumentException(\sprintf('Malformed URL "%s".', $url));
+    }
     if ($component === \PHP_URL_HOST && $strip_www) {
       $result = u((string) $result)->trimPrefix(self::URL_WWW_PREFIX)->toString();
     }
@@ -56,9 +60,9 @@ final class UrlsExtension extends AbstractExtension
    * @param string $url A URL to append to.
    * @param array<string, string|int> $values
    *
-   * @return string|\Stringable The URL with the new parameters added.
+   * @return \Stringable The URL with the new parameters added.
    */
-  private static function filterAppendQueryParams(string $url, array $values, bool $raw = false): string|\Stringable
+  private static function filterAppendQueryParams(string $url, array $values, bool $raw = false): \Stringable
   {
     $url = u($url);
     $encoder = $raw ? \rawurlencode(...) : \urlencode(...);

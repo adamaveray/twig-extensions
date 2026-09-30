@@ -243,6 +243,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  /**
+   * @param array<string, mixed> $context
+   */
   #[Test]
   #[DataProvider('currentUrlAttrDataProvider')]
   public function currentUrlAttr(string $expected, string $parameters, array $context = []): void
@@ -288,6 +291,7 @@ final class HtmlFunctionsTest extends TestCase
    * @param string|array<string, string> $templates
    * @param list<ExtensionInterface> $extensions
    * @param array<string, object> $runtimeResources
+   * @param array<string, mixed> $options
    */
   private static function makeHtmlEnvironment(
     string|array $templates,

@@ -40,7 +40,7 @@ final class DumpExtension extends AbstractExtension
    */
   private function dump(array $context, mixed ...$vars): string
   {
-    if (empty($vars)) {
+    if ($vars === []) {
       $vars = ['context' => \array_filter($context, self::isNotTemplate(...))];
     }
 
@@ -52,7 +52,7 @@ final class DumpExtension extends AbstractExtension
       $this->dumper->dumpValue($var, label: $showLabels ? (string) $label : null);
     }
     $result = \ob_get_clean();
-    \assert(\is_string($result));
+    \assert(\is_string($result), 'The output buffering must be active.');
     return $result;
   }
 

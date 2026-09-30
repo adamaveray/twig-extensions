@@ -40,6 +40,7 @@ final class TwigEnvironmentTest extends TestCase
     $environment = self::makeCustomEnvironment();
     $environment->addContainerLoader($container);
 
+    // @mago-expect analysis:possibly-invalid-argument
     self::assertSame(
       $testObject,
       $environment->getRuntime($name),
@@ -195,6 +196,7 @@ final class TwigEnvironmentTest extends TestCase
     $container->expects($this->once())->method('get')->with($testServiceName)->willReturn($testService);
 
     $environment = new TwigEnvironment(new ArrayLoader([]), ['container' => $container]);
+    // @mago-expect analysis:possibly-invalid-argument
     $loadedService = $environment->getRuntime($testServiceName);
     self::assertSame($testService, $loadedService, 'The container service should be loaded.');
   }

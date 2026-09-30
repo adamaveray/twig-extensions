@@ -91,6 +91,7 @@ final class DumpTest extends TestCase
       $dumper->dumpValue($argument, label: $labels ? (string) $key : null);
     }
     $output = \ob_get_clean();
+    \assert(\is_string($output), 'The output buffering must be active.');
 
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -115,7 +116,13 @@ final class DumpTest extends TestCase
 
   private static function genericiseDumpId(string $html): string
   {
-    return \preg_replace(pattern: '~' . \preg_quote('sf-dump-', '~') . '\\d+~u', replacement: '$1%ID%', subject: $html);
+    return (
+      \preg_replace(
+        pattern: '~' . \preg_quote('sf-dump-', '~') . '\\d+~u',
+        replacement: '$1%ID%',
+        subject: $html,
+      ) ?? throw new \RuntimeException('Failed to genericise dump ID.')
+    );
   }
 
   private static function createStubDumper(
@@ -134,8 +141,8 @@ final class DumpTest extends TestCase
         static $i = 0;
 
         try {
-          self::assertEquals(\array_values($expectedConsecutiveArguments)[$i], $value, $message);
-          self::assertEquals(\array_keys($expectedConsecutiveArguments)[$i], $label, $message);
+          self::assertEquals(\array_values($expectedConsecutiveArguments)[$i] ?? null, $value, $message);
+          self::assertEquals(\array_keys($expectedConsecutiveArguments)[$i] ?? null, $label, $message);
           echo $dumpOutput;
         } finally {
           $i++;

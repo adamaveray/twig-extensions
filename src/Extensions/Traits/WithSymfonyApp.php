@@ -6,10 +6,16 @@ namespace Averay\TwigExtensions\Extensions\Traits;
 
 use Symfony\Bridge\Twig\AppVariable;
 
+/**
+ * @internal
+ */
 trait WithSymfonyApp
 {
   final public const string CONTEXT_VALUE_SYMFONY_APP = 'app';
 
+  /**
+   * @param array<string, mixed> $context
+   */
   final protected static function getAppVariableFromContext(array $context): ?AppVariable
   {
     /** @psalm-suppress MixedAssignment */

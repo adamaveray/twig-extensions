@@ -33,7 +33,10 @@ final class ArrayAllOrAnyTest extends TestExpression
 
   private function getTestName(): string
   {
-    \assert(\is_array($this->attributes) && isset($this->attributes['name']) && \is_string($this->attributes['name']));
+    \assert(
+      \is_array($this->attributes) && isset($this->attributes['name']) && \is_string($this->attributes['name']),
+      'The node must have a valid `name` attribute.',
+    );
     return $this->attributes['name'];
   }
 

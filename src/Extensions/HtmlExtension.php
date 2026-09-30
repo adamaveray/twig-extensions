@@ -13,6 +13,13 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+/**
+ * @psalm-type FullResource = array{
+ *   url: string,
+ *   integrity?: string,
+ *   crossorigin?: string,
+ * }
+ */
 final class HtmlExtension extends AbstractExtension
 {
   use WithRequest;
@@ -147,12 +154,6 @@ final class HtmlExtension extends AbstractExtension
   }
 
   /**
-   * @psalm-type FullResource = array{
-   *   url: string,
-   *   integrity?: string,
-   *   crossorigin?: string,
-   * }
-   *
    * @param array<value-of<HtmlBuilder::PRELOAD_TYPES>, string|list<string|FullResource>> $preloads
    * @param list<string> $preconnect_hosts
    *
@@ -164,6 +165,7 @@ final class HtmlExtension extends AbstractExtension
     array $preconnect_hosts = [],
   ): string {
     $htmlBuilder = $environment->getRuntime(HtmlBuilder::class);
+    // @mago-expect analysis:possibly-invalid-argument -- Requires dependency update.
     return $htmlBuilder->buildPreloadLinks($preloads, $preconnect_hosts);
   }
 

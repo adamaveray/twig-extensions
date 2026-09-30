@@ -6,6 +6,9 @@ namespace Averay\TwigExtensions\Bundles;
 
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @api
+ */
 interface ExtensionBundleInterface
 {
   /**
