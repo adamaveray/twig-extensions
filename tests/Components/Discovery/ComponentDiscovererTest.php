@@ -172,28 +172,36 @@ final class ComponentDiscovererTest extends TestCase
   }
 
   #[Test]
-  public function throwsForMissingTemplate(): void
+  public function missingTemplatesUseFirstDirectory(): void
+  {
+    $registry = self::discover([
+      self::FIXTURES_NAMESPACE . 'MissingTemplate\\' => ['@views/components/', '@framework/components'],
+    ], []);
+
+    self::assertSame(
+      '@views/components/Orphan.html.twig',
+      $registry->getComponent('Orphan')?->template,
+      'A component without an existing template should use the template path in the first directory.',
+    );
+  }
+
+  #[Test]
+  public function throwsWithoutTemplateDirectories(): void
   {
     self::assertThrows(
       static function (): void {
-        self::discover([
-          self::FIXTURES_NAMESPACE . 'MissingTemplate\\' => ['@views/components/', '@framework/components'],
-        ], []);
+        self::discover([self::FIXTURES_NAMESPACE . 'MissingTemplate\\' => []], []);
       },
       test: static fn(\Throwable $exception): bool => (
         $exception instanceof TemplateNotFoundException
         && $exception->componentName === 'Orphan'
         && $exception->className === Fixtures\MissingTemplate\Orphan::class
-        && $exception->searchedPaths === [
-          '@views/components/Orphan.html.twig',
-          '@framework/components/Orphan.html.twig',
-        ]
         && $exception->getMessage() === \sprintf(
-          'No template found for component "Orphan" (%s). Searched in "@views/components/Orphan.html.twig", "@framework/components/Orphan.html.twig".',
+          'No template found for component "Orphan" (%s).',
           Fixtures\MissingTemplate\Orphan::class,
         )
       ),
-      message: 'A component without a template should be rejected.',
+      message: 'A component without any template directories should be rejected.',
     );
   }
 

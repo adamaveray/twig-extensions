@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Components;
 
-use Averay\TwigExtensions\Components\Discovery\Exceptions\TemplateNotFoundException;
+use Averay\TwigExtensions\Components\Definitions\ComponentDefinition;
+use Averay\TwigExtensions\Components\Definitions\ComponentRegistry;
 use Averay\TwigExtensions\Components\Templates\ChainedTemplateFinder;
 use Averay\TwigExtensions\Components\TwigComponentsConfigurator;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
@@ -17,7 +18,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
-use Twig\Error\RuntimeError;
+use Twig\Error\LoaderError;
 use Twig\Loader\ArrayLoader;
 
 /**
@@ -160,45 +161,66 @@ final class TwigComponentsConfiguratorTest extends TestCase
   #[Test]
   public function reusesCachedComponents(): void
   {
-    $configurator = self::makeConfigurator(cache: new ArrayAdapter());
+    $cache = new ArrayAdapter();
+    $configurator = self::makeConfigurator(cache: $cache);
     self::assertRenders(
       'Hello User.',
       self::makeComponentsEnvironment($configurator, ['template' => '<twig:Greeting name="User" />']),
       message: 'The component should be rendered.',
     );
 
-    $environment = self::makeComponentsEnvironment(
-      $configurator,
-      ['template' => '<twig:Greeting name="User" />'],
-      componentTemplates: self::excludingKeys(self::COMPONENT_TEMPLATES, ['components/Panel.html.twig']),
+    // Replaces the cached Greeting component's template to detect the cached components being used
+    $modifiedGreetingDefinition = new ComponentDefinition(
+      name: 'Greeting',
+      className: Fixtures\Rendering\Greeting::class,
+      template: 'cached/Greeting.html.twig',
+      templateMethod: null,
+      exposePublicProps: true,
+      attributesVar: 'attributes',
+      preMountMethods: [],
+      mountMethods: [],
+      postMountMethods: [],
     );
+    $modifiedCacheItem = $cache->getItem(self::getCachedRegistryKey($cache))->set(new ComponentRegistry([
+      'Greeting' => $modifiedGreetingDefinition,
+    ]));
+    $cache->save($modifiedCacheItem);
+
+    $environment = self::makeComponentsEnvironment($configurator, [
+      'template' => '<twig:Greeting name="User" />',
+      'cached/Greeting.html.twig' => 'Cached: Hello {{ name }}.',
+    ]);
     self::assertRenders(
-      'Hello User.',
+      'Cached: Hello User.',
       $environment,
       message: 'The cached components should be used instead of discovering them again.',
     );
   }
 
   #[Test]
-  public function discoveryFailsWithIncompleteTemplates(): void
+  public function rendersComponentsWhenOtherTemplatesAreMissing(): void
   {
     $environment = self::makeComponentsEnvironment(
       self::makeConfigurator(),
-      ['template' => '<twig:Greeting name="User" />'],
+      [
+        'template' => '<twig:Greeting name="User" />',
+        'panel-template' => '<twig:Panel variant="example" />',
+      ],
       componentTemplates: self::excludingKeys(self::COMPONENT_TEMPLATES, ['components/Panel.html.twig']),
     );
 
+    self::assertRenders(
+      'Hello User.',
+      $environment,
+      message: 'A component should be rendered when another component’s template is missing.',
+    );
     self::assertThrows(
       static function () use ($environment): void {
-        $environment->render('template');
+        $environment->render('panel-template');
       },
-      test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
-      testPrevious: static fn(?\Throwable $previous): bool => (
-        $previous instanceof TemplateNotFoundException
-        && $previous->componentName === 'Panel'
-        && $previous->className === Fixtures\Rendering\Panel::class
-      ),
-      message: 'Discovering components without all their templates should fail.',
+      test: static fn(\Throwable $exception): bool => $exception instanceof LoaderError
+      && \str_contains($exception->getMessage(), '"components/Panel.html.twig"'),
+      message: 'Rendering a component with a missing template should fail.',
     );
   }
 
@@ -209,20 +231,16 @@ final class TwigComponentsConfiguratorTest extends TestCase
     $configurator = self::makeConfigurator(cache: $cache);
     $configurator->warmCache(self::makeComponentsEnvironment($configurator, []));
 
+    $registry = $cache->getItem(self::getCachedRegistryKey($cache))->get();
+    self::assertInstanceOf(ComponentRegistry::class, $registry, 'The components should be cached.');
+    self::assertSame(
+      [Fixtures\Rendering\Greeting::class, Fixtures\Rendering\Panel::class],
+      \array_values($registry->getClassNames()),
+      'All discovered components should be cached.',
+    );
     self::assertTrue(
       $cache->getItem('ux.twig_component.component_properties')->isHit(), // Symfony UX's property metadata cache key
       'The component property metadata should be cached.',
-    );
-
-    $environment = self::makeComponentsEnvironment(
-      $configurator,
-      ['template' => '<twig:Greeting name="User" />'],
-      componentTemplates: self::excludingKeys(self::COMPONENT_TEMPLATES, ['components/Panel.html.twig']),
-    );
-    self::assertRenders(
-      'Hello User.',
-      $environment,
-      message: 'The warmed components should be used instead of discovering them again.',
     );
   }
 
@@ -271,6 +289,17 @@ final class TwigComponentsConfiguratorTest extends TestCase
     ]);
     $configurator->configure($environment);
     return $environment;
+  }
+
+  private static function getCachedRegistryKey(ArrayAdapter $cache): string
+  {
+    foreach (\array_keys($cache->getValues()) as $key) {
+      $key = (string) $key;
+      if ($cache->getItem($key)->get() instanceof ComponentRegistry) {
+        return $key;
+      }
+    }
+    self::fail('No component registry was cached.');
   }
 
   /**

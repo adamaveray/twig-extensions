@@ -125,11 +125,10 @@ final readonly class ComponentDiscoverer
     $template = $attributeConfig['template'] ?? null;
     if ($template === null && $templateMethod === null) {
       $templatePaths = self::getTemplatePaths($name, $templateDirectories);
-      $template = $this->findExistingTemplate($templatePaths) ?? throw new TemplateNotFoundException(
-          componentName: $name,
-          className: $className,
-          searchedPaths: $templatePaths,
-        );
+      $template =
+        $this->findExistingTemplate($templatePaths)
+          ?? \array_first($templatePaths)
+          ?? throw new TemplateNotFoundException(componentName: $name, className: $className);
     }
 
     [
