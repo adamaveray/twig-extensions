@@ -142,11 +142,10 @@ final class PlaceholdersExtension extends AbstractExtension
       return \max(0, \min(255, $value));
     };
 
-    $hash = \md5('color-' . \random_int(0, 99_999_999));
     $seed = [
-      'r' => (int) \hexdec(\substr($hash, 0, 2)),
-      'g' => (int) \hexdec(\substr($hash, 2, 2)),
-      'b' => (int) \hexdec(\substr($hash, 4, 2)),
+      'r' => \random_int(0, 255),
+      'g' => \random_int(0, 255),
+      'b' => \random_int(0, 255),
     ];
 
     /** @var list<Color> $colors */
