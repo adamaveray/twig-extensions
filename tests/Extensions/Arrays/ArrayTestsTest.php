@@ -20,27 +20,29 @@ final class ArrayTestsTest extends TestCase
 {
   #[Test]
   #[DataProvider('arraysDataProvider')]
-  public function allEmptyAndAnyEmpty(array $array): void
+  public function allEmptyTest(array $array): void
   {
-    $environment = self::makeEnvironment([
-      'all_empty' => '{{- array is all_empty ? "yes" : "no" -}}',
-      'any_empty' => '{{- array is any_empty ? "yes" : "no" -}}',
-    ], [new ArraysExtension()]);
-    $context = ['array' => $array];
+    $environment = self::makeEnvironment('{{- array is all_empty ? "yes" : "no" -}}', [new ArraysExtension()]);
 
     self::assertRenders(
       \array_all($array, static fn(mixed $value): bool => empty($value)) ? 'yes' : 'no',
       $environment,
-      'all_empty',
-      $context,
-      'The `all_empty` test should match the PHP function `array_all`.',
+      context: ['array' => $array],
+      message: 'The `all_empty` test should match the PHP function `array_all`.',
     );
+  }
+
+  #[Test]
+  #[DataProvider('arraysDataProvider')]
+  public function anyEmptyTest(array $array): void
+  {
+    $environment = self::makeEnvironment('{{- array is any_empty ? "yes" : "no" -}}', [new ArraysExtension()]);
+
     self::assertRenders(
       \array_any($array, static fn(mixed $value): bool => empty($value)) ? 'yes' : 'no',
       $environment,
-      'any_empty',
-      $context,
-      'The `any_empty` test should match the PHP function `array_any`.',
+      context: ['array' => $array],
+      message: 'The `any_empty` test should match the PHP function `array_any`.',
     );
   }
 
