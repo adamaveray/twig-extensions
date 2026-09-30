@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\UrlsExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -15,8 +16,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(UrlsExtension::class)]
 final class UrlsTest extends TestCase
 {
+  #[Test]
   #[DataProvider('urlPartDataProvider')]
-  public function testUrlPart(string $expected, string $url, string $parameters): void
+  public function urlPart(string $expected, string $url, string $parameters): void
   {
     self::assertFilterRenders(
       \htmlspecialchars($expected, \ENT_QUOTES | \ENT_HTML5),
@@ -91,8 +93,9 @@ final class UrlsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('appendQueryParamsDataProvider')]
-  public function testAppendQueryParams(string $expected, string $url, string $parameters): void
+  public function appendQueryParams(string $expected, string $url, string $parameters): void
   {
     self::assertFilterRenders(
       \htmlspecialchars($expected, \ENT_QUOTES | \ENT_HTML5),

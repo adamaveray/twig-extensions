@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\TwigEnvironment;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
@@ -26,7 +27,8 @@ use Twig\TwigTest;
 #[CoversClass(TwigEnvironment::class)]
 final class TwigEnvironmentTest extends TestCase
 {
-  public function testAddContainerLoader(): void
+  #[Test]
+  public function addContainerLoaderMethod(): void
   {
     $name = 'test-object';
     $testObject = new \stdClass();
@@ -45,7 +47,8 @@ final class TwigEnvironmentTest extends TestCase
     );
   }
 
-  public function testRuntimeLoaders(): void
+  #[Test]
+  public function addRuntimeLoaders(): void
   {
     $loaders = [self::createStub(RuntimeLoaderInterface::class), self::createStub(RuntimeLoaderInterface::class)];
 
@@ -56,7 +59,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertSame($loaders, $reflectionProperty->getValue($environment), 'The runtime loaders should be stored.');
   }
 
-  public function testBundles(): void
+  #[Test]
+  public function addBundles(): void
   {
     $createMockBundle = function (array $extensions = []): ExtensionBundleInterface&MockObject {
       $bundle = $this->createMock(ExtensionBundleInterface::class);
@@ -94,7 +98,8 @@ final class TwigEnvironmentTest extends TestCase
     );
   }
 
-  public function testExtensions(): void
+  #[Test]
+  public function addExtensions(): void
   {
     $environment = self::makeCustomEnvironment();
 
@@ -105,7 +110,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($extensions, $environment->getExtensions(), 'The extensions should be stored.');
   }
 
-  public function testTokenParsers(): void
+  #[Test]
+  public function addTokenParsers(): void
   {
     $createTokenParser = function (string $tag): TokenParserInterface {
       $tokenParser = $this->createStub(TokenParserInterface::class);
@@ -120,7 +126,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($tokenParsers, $environment->getTokenParsers(), 'The token parsers should be stored.');
   }
 
-  public function testNodeVisitors(): void
+  #[Test]
+  public function addNodeVisitors(): void
   {
     $visitors = [self::createStub(NodeVisitorInterface::class), self::createStub(NodeVisitorInterface::class)];
 
@@ -130,7 +137,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($visitors, $environment->getNodeVisitors(), 'The node visitors should be stored.');
   }
 
-  public function testFilters(): void
+  #[Test]
+  public function addFilters(): void
   {
     $filters = [new TwigFilter('abc'), new TwigFilter('def')];
 
@@ -140,7 +148,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($filters, $environment->getFilters(), 'The filters should be stored.');
   }
 
-  public function testTests(): void
+  #[Test]
+  public function addTests(): void
   {
     $tests = [new TwigTest('abc'), new TwigTest('def')];
 
@@ -150,7 +159,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($tests, $environment->getTests(), 'The tests should be stored.');
   }
 
-  public function testFunctions(): void
+  #[Test]
+  public function addFunctions(): void
   {
     $functions = [new TwigFunction('abc'), new TwigFunction('def')];
 
@@ -160,7 +170,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertContainsAll($functions, $environment->getFunctions(), 'The functions should be stored.');
   }
 
-  public function testGlobals(): void
+  #[Test]
+  public function addGlobals(): void
   {
     $globals = [
       'hello' => 'world',
@@ -173,7 +184,8 @@ final class TwigEnvironmentTest extends TestCase
     self::assertSame($globals, $environment->getGlobals(), 'The globals should be stored.');
   }
 
-  public function testAddsContainerLoader(): void
+  #[Test]
+  public function containerConstructorOption(): void
   {
     $testService = new \stdClass();
     $testServiceName = 'test-service';

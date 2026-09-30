@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Faker\Generator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\TwigFunction;
 
 /**
@@ -19,8 +20,9 @@ final class PlaceholderStringsTest extends TestCase
 {
   private const string DEFAULT_LOCALE = 'en_GB';
 
+  #[Test]
   #[DataProvider('generatorDataProvider')]
-  public function testGenerator(string $parameters): void
+  public function placeholderGenerator(string $parameters): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -39,8 +41,9 @@ final class PlaceholderStringsTest extends TestCase
     yield 'Custom locale' => ['locale: "ja_JP"'];
   }
 
+  #[Test]
   #[DataProvider('wordsDataProvider')]
-  public function testWords(string $expectedPattern, string $parameters): void
+  public function placeholderWords(string $expectedPattern, string $parameters): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -70,8 +73,9 @@ final class PlaceholderStringsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('sentencesDataProvider')]
-  public function testSentences(string $expectedPattern, string $parameters): void
+  public function placeholderSentences(string $expectedPattern, string $parameters): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -101,8 +105,9 @@ final class PlaceholderStringsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('paragraphsDataProvider')]
-  public function testParagraphs(string $expectedPattern, string $parameters): void
+  public function placeholderParagraphs(string $expectedPattern, string $parameters): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -132,8 +137,9 @@ final class PlaceholderStringsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('textDataProvider')]
-  public function testText(string $expectedPattern, string $parameters): void
+  public function placeholderText(string $expectedPattern, string $parameters): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG

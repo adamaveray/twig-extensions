@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Extensions\HtmlExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Twig\Environment;
@@ -20,8 +21,9 @@ use Twig\Extension\ExtensionInterface;
 #[CoversClass(HtmlExtension::class)]
 final class HtmlFiltersTest extends TestCase
 {
+  #[Test]
   #[DataProvider('wrapWordsDataProvider')]
-  public function testWrapWords(string $expected, string $string, string $wrappingTag): void
+  public function wrapWords(string $expected, string $string, string $wrappingTag): void
   {
     $environment = self::makeHtmlEnvironment('{{- string | wrap_words(wrapping_tag) -}}');
     self::assertRenders($expected, $environment, context: ['string' => $string, 'wrapping_tag' => $wrappingTag]);
@@ -48,8 +50,9 @@ final class HtmlFiltersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('wrapParagraphsDataProvider')]
-  public function testWrapParagraphs(string $expected, string $string, ?string $wrappingTag = null): void
+  public function wrapParagraphs(string $expected, string $string, ?string $wrappingTag = null): void
   {
     $environment = self::makeHtmlEnvironment(
       '{{- string | wrap_paragraphs' . ($wrappingTag === null ? '' : '(wrapping_tag)') . ' -}}',
@@ -89,8 +92,9 @@ final class HtmlFiltersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('addClassDataProvider')]
-  public function testAddClass(string $expected, string $classList, string $parameters): void
+  public function addClass(string $expected, string $classList, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- class_list | add_class(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment, context: ['class_list' => $classList]);
@@ -123,8 +127,9 @@ final class HtmlFiltersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('mapHtmlIdsDataProvider')]
-  public function testMapHtmlIds(string $expected, string $html, string $parameters): void
+  public function mapHtmlIds(string $expected, string $html, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- html | map_html_ids(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment, context: ['html' => $html]);
@@ -190,8 +195,9 @@ final class HtmlFiltersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('prefixHtmlIdsDataProvider')]
-  public function testPrefixHtmlIds(string $expected, string $html, string $parameters): void
+  public function prefixHtmlIds(string $expected, string $html, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- html | prefix_html_ids(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment, context: ['html' => $html]);
@@ -277,13 +283,10 @@ final class HtmlFiltersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('dataUriDataProvider')]
-  public function testDataUri(
-    string $expected,
-    string $data,
-    string $parameters,
-    ?string $inferredMimeType = null,
-  ): void {
+  public function dataUri(string $expected, string $data, string $parameters, ?string $inferredMimeType = null): void
+  {
     $mimeTypesGuesser = $this->createMock(MimeTypeGuesserInterface::class);
     if ($inferredMimeType === null) {
       $mimeTypesGuesser->expects($this->never())->method('guessMimeType');

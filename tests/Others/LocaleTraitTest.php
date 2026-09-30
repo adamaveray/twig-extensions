@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bridge\Twig\AppVariable as SymfonyAppVariable;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Translation\Translator;
@@ -21,8 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[CoversTrait(WithSymfonyApp::class)]
 final class LocaleTraitTest extends TestCase
 {
+  #[Test]
   #[DataProvider('localeInferenceDataProvider')]
-  public function testLocaleInference(
+  public function localeInference(
     string $expectedLocale,
     string|TranslatorInterface|null $translatorOrLocale,
     array $context,
@@ -70,7 +72,8 @@ final class LocaleTraitTest extends TestCase
     ];
   }
 
-  public function testLocaleInferenceFailsWhenNoLocale(): void
+  #[Test]
+  public function localeInferenceFailsWhenNoLocale(): void
   {
     $instance = self::makeTraitInstance(null);
     $this->expectException(\RuntimeException::class);

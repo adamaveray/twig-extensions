@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\ArraysExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\RuntimeError;
 
 /**
@@ -16,8 +17,9 @@ use Twig\Error\RuntimeError;
 #[CoversClass(ArraysExtension::class)]
 final class ArrayOthersTest extends TestCase
 {
+  #[Test]
   #[DataProvider('appendDataProvider')]
-  public function testAppend(array $expected, array $array, string $parameters): void
+  public function append(array $expected, array $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | append(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),
@@ -52,8 +54,9 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('mergeExistingDataProvider')]
-  public function testMergeExisting(array $expected, array $array, string $parameters): void
+  public function mergeExisting(array $expected, array $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | merge_existing(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),
@@ -132,8 +135,9 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('omitDataProvider')]
-  public function testOmit(array $expected, array $array, string $parameters): void
+  public function omit(array $expected, array $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | omit(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),
@@ -190,8 +194,9 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('pickDataProvider')]
-  public function testPick(array $expected, array $array, string $parameters): void
+  public function pick(array $expected, array $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | pick(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),
@@ -248,7 +253,8 @@ final class ArrayOthersTest extends TestCase
     ];
   }
 
-  public function testPickFailsWithUndefinedKeys(): void
+  #[Test]
+  public function pickFailsWithUndefinedKeys(): void
   {
     $environment = self::makeEnvironment('{{- { hello: "world" } | pick(["unknown-key"]) -}}', [new ArraysExtension()]);
 
@@ -256,8 +262,9 @@ final class ArrayOthersTest extends TestCase
     $environment->render('template');
   }
 
+  #[Test]
   #[DataProvider('mapEntriesDataProvider')]
-  public function testMapEntries(array $expected, array $array, string $parameters): void
+  public function mapEntries(array $expected, array $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | map_entries(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),

@@ -10,6 +10,7 @@ use Averay\TwigExtensions\Helpers\TemplateDumperInterface;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -18,7 +19,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(TemplateDumper::class)]
 final class DumpTest extends TestCase
 {
-  public function testDumpReceivesArgumentsList(): void
+  #[Test]
+  public function dumpReceivesArgumentsList(): void
   {
     $dumper = self::createStubDumper([0 => 'hello', 1 => 'world'], '%%dump-output%%');
 
@@ -37,7 +39,8 @@ final class DumpTest extends TestCase
     );
   }
 
-  public function testDumpReceivesArgumentsArray(): void
+  #[Test]
+  public function dumpReceivesArgumentsArray(): void
   {
     $dumper = self::createStubDumper(['first' => 'hello', 'second' => 'world'], '%%dump-output%%');
 
@@ -56,7 +59,8 @@ final class DumpTest extends TestCase
     );
   }
 
-  public function testDumpReceivesContext(): void
+  #[Test]
+  public function dumpReceivesContext(): void
   {
     $context = ['hello' => 'world'];
 
@@ -77,8 +81,9 @@ final class DumpTest extends TestCase
     );
   }
 
+  #[Test]
   #[DataProvider('dumpDataProvider')]
-  public function testTemplateDumper(array $arguments, string $syntax, bool $labels): void
+  public function templateDumper(array $arguments, string $syntax, bool $labels): void
   {
     $dumper = new TemplateDumper();
     \ob_start();

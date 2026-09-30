@@ -10,6 +10,7 @@ use League\CommonMark\ConverterInterface;
 use League\CommonMark\Output\RenderedContentInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bridge\Twig\AppVariable as SymfonyAppVariable;
 use Symfony\Component\String\ByteString;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -26,8 +27,9 @@ use function Symfony\Component\String\s;
 #[CoversClass(StringsExtension::class)]
 final class StringsBasicTest extends TestCase
 {
+  #[Test]
   #[DataProvider('stringWrapperFilterDataProvider')]
-  public function testStringWrapperFilter(string $expectedClass, string $string, string $filter): void
+  public function stringWrapperFilter(string $expectedClass, string $string, string $filter): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -48,8 +50,9 @@ final class StringsBasicTest extends TestCase
     yield 'Autodetect Binary' => [\get_class(s(ByteString::class)), 'hello world', 's'];
   }
 
+  #[Test]
   #[DataProvider('usesAppLocaleDataProvider')]
-  public function testUsesAppLocale(string $locale, ?string $defaultLocale, array $context): void
+  public function usesAppLocale(string $locale, ?string $defaultLocale, array $context): void
   {
     $extension = new StringsExtension($defaultLocale);
     $method = new \ReflectionMethod(StringsExtension::class, 'inferLocale');
@@ -86,7 +89,8 @@ final class StringsBasicTest extends TestCase
     ];
   }
 
-  public function testMarkdown(): void
+  #[Test]
+  public function markdown(): void
   {
     $filters = ['markdown', 'markdown_to_html'];
     $input = 'Markdown.';
@@ -106,7 +110,8 @@ final class StringsBasicTest extends TestCase
     }
   }
 
-  public function testMarkdownIgnoringIndentation(): void
+  #[Test]
+  public function markdownIgnoringIndentation(): void
   {
     $filters = ['markdown', 'markdown_to_html'];
     $inputIndented = <<<'TXT'
@@ -141,8 +146,9 @@ final class StringsBasicTest extends TestCase
     }
   }
 
+  #[Test]
   #[DataProvider('slugDataProvider')]
-  public function testSlug(
+  public function slug(
     string $expectedSeparator,
     bool $expectedLower,
     bool $expectedUpper,
@@ -228,8 +234,9 @@ final class StringsBasicTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('outdentDataProvider')]
-  public function testOutdent(string $expected, string $string): void
+  public function outdent(string $expected, string $string): void
   {
     $environment = self::makeEnvironment('{{- string | outdent -}}', [new StringsExtension()]);
 

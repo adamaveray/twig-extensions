@@ -10,6 +10,7 @@ use Averay\TwigExtensions\Extensions\CssExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 
@@ -19,8 +20,9 @@ use Twig\Extension\ExtensionInterface;
 #[CoversClass(CssExtension::class)]
 final class CssTest extends TestCase
 {
+  #[Test]
   #[DataProvider('cssStringDataProvider')]
-  public function testCssString(string $expected, string $template, array $context = []): void
+  public function cssString(string $expected, string $template, array $context = []): void
   {
     $environment = self::makeCssEnvironment($template);
     self::assertRenders($expected, $environment, context: $context);
@@ -40,8 +42,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('cssImageSetDataProvider')]
-  public function testCssImageSet(string $expected, mixed $entries, ?string $format = null): void
+  public function cssImageSet(string $expected, mixed $entries, ?string $format = null): void
   {
     $environment = self::makeCssEnvironment('{{- css_image_set(entries, format) | raw -}}');
     self::assertRenders($expected, $environment, context: ['entries' => $entries, 'format' => $format]);
@@ -98,8 +101,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('cssPropertiesDataProvider')]
-  public function testCssProperties(string $expected, array $properties): void
+  public function cssProperties(string $expected, array $properties): void
   {
     $environment = self::makeCssEnvironment('{{- css_properties(properties) | raw -}}');
     self::assertRenders($expected, $environment, context: ['properties' => $properties]);
@@ -123,8 +127,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('cssPropertyDataProvider')]
-  public function testCssProperty(string $expected, string $name, string|array $values): void
+  public function cssProperty(string $expected, string $name, string|array $values): void
   {
     $environment = self::makeCssEnvironment('{{- css_property(name, values) | raw -}}');
     self::assertRenders($expected, $environment, context: ['name' => $name, 'values' => $values]);
@@ -145,8 +150,9 @@ final class CssTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('cssUrlDataProvider')]
-  public function testCssUrl(string $expected, string $url): void
+  public function cssUrl(string $expected, string $url): void
   {
     $environment = self::makeCssEnvironment('{{- css_url(url) | raw -}}');
     self::assertRenders($expected, $environment, context: ['url' => $url]);

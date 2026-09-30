@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\ArraysExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\RuntimeError;
 
 /**
@@ -16,8 +17,9 @@ use Twig\Error\RuntimeError;
 #[CoversClass(ArraysExtension::class)]
 final class ArraySortTest extends TestCase
 {
+  #[Test]
   #[DataProvider('sortDataProvider')]
-  public function testSort(array $expected, iterable $array, string $parameters): void
+  public function sortFilter(array $expected, iterable $array, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- array | sort(' . $parameters . ') | json_encode | raw -}}', [
       new ArraysExtension(),
@@ -186,15 +188,17 @@ final class ArraySortTest extends TestCase
     ];
   }
 
-  public function testSortFailsWithInvalidTarget(): void
+  #[Test]
+  public function sortFailsWithInvalidTarget(): void
   {
     $this->expectException(RuntimeError::class);
-    $this->testSort([], [], 'by: "other"');
+    $this->sortFilter([], [], 'by: "other"');
   }
 
-  public function testSortFailsWithNonPreservedKeys(): void
+  #[Test]
+  public function sortFailsWithNonPreservedKeys(): void
   {
     $this->expectException(RuntimeError::class);
-    $this->testSort([], [], 'by: "key", preserve_keys: false');
+    $this->sortFilter([], [], 'by: "key", preserve_keys: false');
   }
 }

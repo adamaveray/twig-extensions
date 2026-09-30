@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Bundles\AbstractBundle;
 use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Extension\ExtensionInterface;
 
 /**
@@ -16,7 +17,8 @@ use Twig\Extension\ExtensionInterface;
 #[CoversClass(AbstractBundle::class)]
 final class AbstractBundleTest extends TestCase
 {
-  public function testExtensions(): void
+  #[Test]
+  public function storesExtensions(): void
   {
     $extensions = [
       self::createStub(ExtensionInterface::class),
@@ -37,7 +39,8 @@ final class AbstractBundleTest extends TestCase
     self::assertSame($extensions, $bundle->getExtensions(), 'The extensions should be stored.');
   }
 
-  public function testAddingBundles(): void
+  #[Test]
+  public function withBundleCombinesExtensions(): void
   {
     $initialExtensions = [self::createStub(ExtensionInterface::class), self::createStub(ExtensionInterface::class)];
     $addedExtensions = [self::createStub(ExtensionInterface::class), self::createStub(ExtensionInterface::class)];

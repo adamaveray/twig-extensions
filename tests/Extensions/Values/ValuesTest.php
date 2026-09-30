@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Nodes\Tests\InstanceOfTest;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -17,8 +18,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(InstanceOfTest::class)]
 final class ValuesTest extends TestCase
 {
+  #[Test]
   #[DataProvider('jsValueDataProvider')]
-  public function testJsValue(string $expected, string $value, string $parameters = ''): void
+  public function jsValue(string $expected, string $value, string $parameters = ''): void
   {
     $environment = self::makeEnvironment('{{- ' . $value . ' | js_value(' . $parameters . ') -}}', [
       new ValuesExtension(),
@@ -61,8 +63,9 @@ final class ValuesTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('instanceOfDataProvider')]
-  public function testInstanceOf(bool $expected, mixed $value, string $className): void
+  public function instanceOfTest(bool $expected, mixed $value, string $className): void
   {
     $environment = self::makeEnvironment('{{- value is instance of class_name ? "yes" : "no" -}}', [
       new ValuesExtension(),

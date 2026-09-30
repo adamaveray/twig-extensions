@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\Values\FileSizeSystem;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Extra\Intl\IntlExtension;
 
 /**
@@ -20,8 +21,9 @@ final class UnitsTest extends TestCase
 {
   private const string DEFAULT_LOCALE = 'en_GB';
 
+  #[Test]
   #[DataProvider('siAmountDataProvider')]
-  public function testSiAmount(string $expected, int|float $amount, string $unit, string $parameters = ''): void
+  public function siAmount(string $expected, int|float $amount, string $unit, string $parameters = ''): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -156,8 +158,9 @@ final class UnitsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('bytesDataProvider')]
-  public function testBytes(string $expected, int|float $bytes, string $parameters = ''): void
+  public function bytes(string $expected, int|float $bytes, string $parameters = ''): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -342,7 +345,8 @@ final class UnitsTest extends TestCase
     ];
   }
 
-  public function testLocaleFormatting(): void
+  #[Test]
+  public function localeFormatting(): void
   {
     // Test that number formatting respects locale (French uses comma as decimal separator).
     $environment = self::makeEnvironment(
@@ -359,7 +363,8 @@ final class UnitsTest extends TestCase
     );
   }
 
-  public function testSiAmountLocaleFormatting(): void
+  #[Test]
+  public function siAmountLocaleFormatting(): void
   {
     // Test that number formatting respects locale for si_amount.
     $environment = self::makeEnvironment(

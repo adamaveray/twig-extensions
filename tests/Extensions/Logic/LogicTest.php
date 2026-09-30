@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\LogicExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\RuntimeError;
 
 /**
@@ -16,8 +17,9 @@ use Twig\Error\RuntimeError;
 #[CoversClass(LogicExtension::class)]
 final class LogicTest extends TestCase
 {
+  #[Test]
   #[DataProvider('matchDataProvider')]
-  public function testMatch(string $expected, mixed $value, string $parameters): void
+  public function matchFilter(string $expected, mixed $value, string $parameters): void
   {
     $environment = self::makeEnvironment('{{- value | match('
     . $parameters
@@ -53,7 +55,8 @@ final class LogicTest extends TestCase
     ];
   }
 
-  public function testMatchFailsWhenNoMatchAndStrict(): void
+  #[Test]
+  public function matchFilterFailsWhenNoMatchAndStrict(): void
   {
     $environment = self::makeEnvironment('{{- value | match(cases, strict: true) -}}', extensions: [new LogicExtension()]);
 

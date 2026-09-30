@@ -10,6 +10,7 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use League\Uri\Contracts\UriInterface as LeagueUriInterface;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 use Psr\Http\Message\UriInterface as PsrUriInterface;
 use Symfony\Bridge\Twig\AppVariable as SymfonyAppVariable;
@@ -25,8 +26,9 @@ final class RequestTraitTest extends TestCase
   /**
    * @param array<string, mixed> $context
    */
+  #[Test]
   #[DataProvider('requestInferenceDataProvider')]
-  public function testRequestInference(mixed $expected, array $context): void
+  public function requestInference(mixed $expected, array $context): void
   {
     $instance = self::makeTraitInstance();
     self::assertSame($expected, $instance->getRequest($context), 'The request should be inferred correctly.');
@@ -65,8 +67,9 @@ final class RequestTraitTest extends TestCase
   /**
    * @param array<string, mixed> $context
    */
+  #[Test]
   #[DataProvider('requestUriInferenceDataProvider')]
-  public function testRequestUriInference(string $expected, array $context): void
+  public function requestUriInference(string $expected, array $context): void
   {
     $instance = self::makeTraitInstance();
     self::assertSame($expected, $instance->getRequestUri($context), 'The request URI should be inferred correctly.');
@@ -121,14 +124,16 @@ final class RequestTraitTest extends TestCase
     ];
   }
 
-  public function testRequestUriInferenceFailsWhenNoApp(): void
+  #[Test]
+  public function requestUriInferenceFailsWhenNoApp(): void
   {
     $instance = self::makeTraitInstance();
     $this->expectException(\RuntimeException::class);
     $instance->getRequestUri([]);
   }
 
-  public function testRequestUriInferenceFailsWhenIncompatibleApp(): void
+  #[Test]
+  public function requestUriInferenceFailsWhenIncompatibleApp(): void
   {
     $instance = self::makeTraitInstance();
     $this->expectException(\RuntimeException::class);

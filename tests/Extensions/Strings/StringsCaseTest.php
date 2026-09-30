@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\StringsExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 use function Symfony\Component\String\u;
 
@@ -19,8 +20,9 @@ final class StringsCaseTest extends TestCase
 {
   private const string DEFAULT_LOCALE = 'en';
 
+  #[Test]
   #[DataProvider('upperDataProvider')]
-  public function testUpperCaseConversion(
+  public function upperCaseConversion(
     string $expected,
     string $input,
     string $parameters = '',
@@ -67,8 +69,9 @@ final class StringsCaseTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('lowerDataProvider')]
-  public function testLowerCaseConversion(
+  public function lowerCaseConversion(
     string $expected,
     string $input,
     string $parameters = '',

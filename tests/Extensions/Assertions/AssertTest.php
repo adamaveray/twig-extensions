@@ -10,6 +10,7 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\TokenParsers\AssertTokenParser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\RuntimeError;
 
 /**
@@ -20,8 +21,9 @@ use Twig\Error\RuntimeError;
 #[CoversClass(AssertNode::class)]
 final class AssertTest extends TestCase
 {
+  #[Test]
   #[DataProvider('assertTrueDataProvider')]
-  public function testAssertTrue(string $value): void
+  public function passingAssertionRenders(string $value): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -43,8 +45,9 @@ final class AssertTest extends TestCase
     yield 'Result' => ['("hello" | length) == 5'];
   }
 
+  #[Test]
   #[DataProvider('assertFalseDataProvider')]
-  public function testAssertFalse(string $value): void
+  public function failingAssertionThrows(string $value): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG
@@ -71,7 +74,8 @@ final class AssertTest extends TestCase
     yield 'Result' => ['("hello" | length) == 0'];
   }
 
-  public function testAssertFalseWithMessage(): void
+  #[Test]
+  public function failingAssertionThrowsWithMessage(): void
   {
     $environment = self::makeEnvironment(
       <<<'TWIG'

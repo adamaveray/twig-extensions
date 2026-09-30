@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Nodes\Tests\ArrayAllOrAnyTest;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -17,8 +18,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(ArrayAllOrAnyTest::class)]
 final class ArrayTestsTest extends TestCase
 {
+  #[Test]
   #[DataProvider('arraysDataProvider')]
-  public function testTests(array $array): void
+  public function allEmptyAndAnyEmpty(array $array): void
   {
     $environment = self::makeEnvironment([
       'all_empty' => '{{- array is all_empty ? "yes" : "no" -}}',

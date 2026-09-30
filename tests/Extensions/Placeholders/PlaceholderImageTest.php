@@ -12,6 +12,7 @@ use Averay\TwigExtensions\Tests\Extensions\Assertions\AssertTest;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Mime\MimeTypes;
 
 use function Symfony\Component\String\u;
@@ -24,8 +25,9 @@ use function Symfony\Component\String\u;
 #[CoversClass(AssertNode::class)]
 final class PlaceholderImageTest extends TestCase
 {
+  #[Test]
   #[DependsOnClass(AssertTest::class)]
-  public function testImageUrl(): void
+  public function imageUrl(): void
   {
     $width = 500;
     $height = 350;

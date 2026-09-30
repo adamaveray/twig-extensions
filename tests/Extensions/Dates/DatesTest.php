@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Nodes\Tests\SameDateAsTest;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\SyntaxError;
 
 /**
@@ -28,8 +29,9 @@ final class DatesTest extends TestCase
     return self::getTestDate()->setTimezone(new \DateTimeZone('Australia/Brisbane'));
   }
 
+  #[Test]
   #[DataProvider('isSameDateDataProvider')]
-  public function testIsSameDate(bool $expected, string|array $statements, array $context): void
+  public function isSameDate(bool $expected, string|array $statements, array $context): void
   {
     $statements = \is_string($statements) ? [$statements] : $statements;
     $extensions = [new DatesExtension()];
@@ -174,8 +176,9 @@ final class DatesTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('rejectsCustomFormatForSpecificComparatorsDataProvider')]
-  public function testRejectsCustomFormatForSpecificComparators(string $test): void
+  public function rejectsCustomFormatForSpecificComparators(string $test): void
   {
     $environment = self::makeEnvironment(
       <<<TWIG

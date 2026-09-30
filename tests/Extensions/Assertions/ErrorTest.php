@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Nodes\ErrorNode;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use Averay\TwigExtensions\TokenParsers\ErrorTokenParser;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Twig\Error\RuntimeError;
 
 /**
@@ -19,7 +20,8 @@ use Twig\Error\RuntimeError;
 #[CoversClass(ErrorNode::class)]
 final class ErrorTest extends TestCase
 {
-  public function testError(): void
+  #[Test]
+  public function errorTagThrows(): void
   {
     $environment = self::makeEnvironment(
       <<<'TWIG'
@@ -42,7 +44,8 @@ final class ErrorTest extends TestCase
     );
   }
 
-  public function testErrorWithLevel(): void
+  #[Test]
+  public function errorTagThrowsWithLevel(): void
   {
     $environment = self::makeEnvironment(
       <<<'TWIG'

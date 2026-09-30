@@ -8,6 +8,7 @@ use Averay\TwigExtensions\Extensions\SymfonyCompatibilityExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bridge\Twig\AppVariable;
 
 /**
@@ -16,8 +17,9 @@ use Symfony\Bridge\Twig\AppVariable;
 #[CoversClass(SymfonyCompatibilityExtension::class)]
 final class SymfonyCompatibilityExtensionTest extends TestCase
 {
+  #[Test]
   #[DataProvider('globalsDataProvider')]
-  public function testGlobals(array $expected, ?AppVariable $appVariable): void
+  public function globals(array $expected, ?AppVariable $appVariable): void
   {
     $extension = new SymfonyCompatibilityExtension($appVariable);
     self::assertSame($expected, $extension->getGlobals(), 'The globals should be generated correctly.');

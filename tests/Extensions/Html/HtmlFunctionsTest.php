@@ -9,6 +9,7 @@ use Averay\TwigExtensions\Extensions\HtmlExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bridge\Twig\AppVariable as SymfonyAppVariable;
 use Symfony\Component\HttpFoundation as SymfonyHttp;
 use Symfony\Component\Mime\MimeTypes;
@@ -21,8 +22,9 @@ use Twig\Extension\ExtensionInterface;
 #[CoversClass(HtmlExtension::class)]
 final class HtmlFunctionsTest extends TestCase
 {
+  #[Test]
   #[DataProvider('attrsDataProvider')]
-  public function testAttrs(string $expected, string $parameters): void
+  public function attrs(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- attrs(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -56,8 +58,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('classesDataProvider')]
-  public function testClasses(string $expected, string $parameters): void
+  public function classes(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- classes(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -76,8 +79,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('stylesheetDataProvider')]
-  public function testStylesheet(string $expected, string $parameters): void
+  public function stylesheet(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- stylesheet(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -100,8 +104,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('scriptDataProvider')]
-  public function testScript(string $expected, string $parameters): void
+  public function script(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- script(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -124,8 +129,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('preloadLinksDataProvider')]
-  public function testPreloadLinks(string $expected, string $parameters): void
+  public function preloadLinks(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- preload_links(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -193,8 +199,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('srcsetDataProvider')]
-  public function testSrcset(string $expected, string $parameters): void
+  public function srcset(string $expected, string $parameters): void
   {
     $environment = self::makeHtmlEnvironment('{{- srcset(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment);
@@ -236,8 +243,9 @@ final class HtmlFunctionsTest extends TestCase
     ];
   }
 
+  #[Test]
   #[DataProvider('currentUrlAttrDataProvider')]
-  public function testCurrentUrlAttr(string $expected, string $parameters, array $context = []): void
+  public function currentUrlAttr(string $expected, string $parameters, array $context = []): void
   {
     $environment = self::makeHtmlEnvironment('{{- current_url_attr(' . $parameters . ') -}}');
     self::assertRenders($expected, $environment, context: $context);
