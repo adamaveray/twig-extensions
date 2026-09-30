@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Others;
@@ -14,6 +15,9 @@ use Psr\Http\Message\UriInterface as PsrUriInterface;
 use Symfony\Bridge\Twig\AppVariable as SymfonyAppVariable;
 use Symfony\Component\HttpFoundation as SymfonyHttp;
 
+/**
+ * @internal
+ */
 #[CoversTrait(WithRequest::class)]
 #[CoversTrait(WithSymfonyApp::class)]
 final class RequestTraitTest extends TestCase

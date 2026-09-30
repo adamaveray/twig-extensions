@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Units;
@@ -10,6 +11,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Extra\Intl\IntlExtension;
 
+/**
+ * @internal
+ */
 #[CoversClass(UnitsExtension::class)]
 #[CoversClass(FileSizeSystem::class)]
 final class UnitsTest extends TestCase
@@ -21,9 +25,8 @@ final class UnitsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- amount | format_si_amount(unit$parameters) -}}
-      TWIG
-      ,
+        {{- amount | format_si_amount(unit{$parameters}) -}}
+        TWIG,
       [new IntlExtension(), new UnitsExtension(self::DEFAULT_LOCALE)],
     );
     self::assertRenders(
@@ -158,9 +161,8 @@ final class UnitsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- bytes | format_bytes($parameters) -}}
-      TWIG
-      ,
+        {{- bytes | format_bytes({$parameters}) -}}
+        TWIG,
       [new IntlExtension(), new UnitsExtension(self::DEFAULT_LOCALE)],
     );
     self::assertRenders(
@@ -344,10 +346,9 @@ final class UnitsTest extends TestCase
   {
     // Test that number formatting respects locale (French uses comma as decimal separator).
     $environment = self::makeEnvironment(
-      <<<TWIG
-      {{- bytes | format_bytes(locale: "fr_FR") -}}
-      TWIG
-      ,
+      <<<'TWIG'
+        {{- bytes | format_bytes(locale: "fr_FR") -}}
+        TWIG,
       [new IntlExtension(), new UnitsExtension(self::DEFAULT_LOCALE)],
     );
     self::assertRenders(
@@ -362,10 +363,9 @@ final class UnitsTest extends TestCase
   {
     // Test that number formatting respects locale for si_amount.
     $environment = self::makeEnvironment(
-      <<<TWIG
-      {{- amount | format_si_amount("Hz", locale: "de_DE") -}}
-      TWIG
-      ,
+      <<<'TWIG'
+        {{- amount | format_si_amount("Hz", locale: "de_DE") -}}
+        TWIG,
       [new IntlExtension(), new UnitsExtension(self::DEFAULT_LOCALE)],
     );
     self::assertRenders(

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Arrays;
@@ -9,6 +10,9 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+/**
+ * @internal
+ */
 #[CoversClass(ArraysExtension::class)]
 #[CoversClass(ArrayAllOrAnyTest::class)]
 final class ArrayTestsTest extends TestCase
@@ -16,13 +20,10 @@ final class ArrayTestsTest extends TestCase
   #[DataProvider('arraysDataProvider')]
   public function testTests(array $array): void
   {
-    $environment = self::makeEnvironment(
-      [
-        'all_empty' => '{{- array is all_empty ? "yes" : "no" -}}',
-        'any_empty' => '{{- array is any_empty ? "yes" : "no" -}}',
-      ],
-      [new ArraysExtension()],
-    );
+    $environment = self::makeEnvironment([
+      'all_empty' => '{{- array is all_empty ? "yes" : "no" -}}',
+      'any_empty' => '{{- array is any_empty ? "yes" : "no" -}}',
+    ], [new ArraysExtension()]);
     $context = ['array' => $array];
 
     self::assertRenders(

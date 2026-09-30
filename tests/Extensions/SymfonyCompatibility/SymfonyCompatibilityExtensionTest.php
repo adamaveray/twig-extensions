@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\SymfonyCompatibility;
@@ -9,6 +10,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\Twig\AppVariable;
 
+/**
+ * @internal
+ */
 #[CoversClass(SymfonyCompatibilityExtension::class)]
 final class SymfonyCompatibilityExtensionTest extends TestCase
 {

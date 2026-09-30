@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Placeholders;
@@ -10,6 +11,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\TwigFunction;
 
+/**
+ * @internal
+ */
 #[CoversClass(PlaceholdersExtension::class)]
 final class PlaceholderStringsTest extends TestCase
 {
@@ -20,9 +24,8 @@ final class PlaceholderStringsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- get_class(placeholder_generator($parameters)) -}}
-      TWIG
-      ,
+        {{- get_class(placeholder_generator({$parameters})) -}}
+        TWIG,
       [new PlaceholdersExtension(self::DEFAULT_LOCALE)],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -41,9 +44,8 @@ final class PlaceholderStringsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- placeholder_words($parameters) -}}
-      TWIG
-      ,
+        {{- placeholder_words({$parameters}) -}}
+        TWIG,
       [new PlaceholdersExtension(self::DEFAULT_LOCALE)],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -58,12 +60,12 @@ final class PlaceholderStringsTest extends TestCase
   public static function wordsDataProvider(): iterable
   {
     yield 'Single' => [
-      'expectedPattern' => '~^\w+$~iu',
+      'expectedPattern' => '~^\\w+$~iu',
       'parameters' => '1',
     ];
 
     yield 'Multiple' => [
-      'expectedPattern' => '~^\w+( \w+){3}$~iu',
+      'expectedPattern' => '~^\\w+( \\w+){3}$~iu',
       'parameters' => '4',
     ];
   }
@@ -73,9 +75,8 @@ final class PlaceholderStringsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- placeholder_sentences($parameters) -}}
-      TWIG
-      ,
+        {{- placeholder_sentences({$parameters}) -}}
+        TWIG,
       [new PlaceholdersExtension(self::DEFAULT_LOCALE)],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -90,12 +91,12 @@ final class PlaceholderStringsTest extends TestCase
   public static function sentencesDataProvider(): iterable
   {
     yield 'Single' => [
-      'expectedPattern' => '~^\w[\w ]+\.$~iu',
+      'expectedPattern' => '~^\\w[\\w ]+\\.$~iu',
       'parameters' => '1',
     ];
 
     yield 'Multiple' => [
-      'expectedPattern' => '~^\w[\w ]+\.( \w[\w ]+\.){3}$~iu',
+      'expectedPattern' => '~^\\w[\\w ]+\\.( \\w[\\w ]+\\.){3}$~iu',
       'parameters' => '4',
     ];
   }
@@ -105,9 +106,8 @@ final class PlaceholderStringsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- placeholder_paragraphs($parameters) -}}
-      TWIG
-      ,
+        {{- placeholder_paragraphs({$parameters}) -}}
+        TWIG,
       [new PlaceholdersExtension(self::DEFAULT_LOCALE)],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -122,12 +122,12 @@ final class PlaceholderStringsTest extends TestCase
   public static function paragraphsDataProvider(): iterable
   {
     yield 'Single' => [
-      'expectedPattern' => '~^\w[\w ]+\.( \w[\w ]+\.)*$~iu',
+      'expectedPattern' => '~^\\w[\\w ]+\\.( \\w[\\w ]+\\.)*$~iu',
       'parameters' => '1',
     ];
 
     yield 'Multiple' => [
-      'expectedPattern' => '~^\w[\w ]+\.( \w[\w ]+\.)*(\\n\\n\w[\w ]+\.( \w[\w ]+\.)*){3}$~iu',
+      'expectedPattern' => '~^\\w[\\w ]+\\.( \\w[\\w ]+\\.)*(\\n\\n\\w[\\w ]+\\.( \\w[\\w ]+\\.)*){3}$~iu',
       'parameters' => '4',
     ];
   }
@@ -137,9 +137,8 @@ final class PlaceholderStringsTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- placeholder_text($parameters) -}}
-      TWIG
-      ,
+        {{- placeholder_text({$parameters}) -}}
+        TWIG,
       [new PlaceholdersExtension(self::DEFAULT_LOCALE)],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -155,7 +154,7 @@ final class PlaceholderStringsTest extends TestCase
   {
     // Must have a minimum of 5 characters
     yield 'Multiple' => [
-      'expectedPattern' => '~^[a-z]{1,4}\.$~iu',
+      'expectedPattern' => '~^[a-z]{1,4}\\.$~iu',
       'parameters' => '5',
     ];
   }

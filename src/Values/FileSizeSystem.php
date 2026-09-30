@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Values;
@@ -11,6 +12,7 @@ enum FileSizeSystem: string
 
   /**
    * @return int The number of each unit (e.g. bytes) to use when determining SI prefixes (i.e. the number of values in a "kilo").
+   *
    * @internal
    */
   public function getMultiple(): int
@@ -25,7 +27,7 @@ enum FileSizeSystem: string
    * Provides a string to be inserted between the SI prefix and the unit (e.g. the 'i' in '1MiB', or '' for '1MB').
    *
    * @param string|null $siPrefix The prefix being used.
-   * @return string
+   *
    * @internal
    */
   public function getInfix(?string $siPrefix = null): string

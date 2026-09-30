@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -82,6 +83,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param array<array-key, \Stringable|scalar|null> ...$attrs
+   *
    * @see HtmlBuilder::buildAttrs
    */
   private static function buildAttrs(Environment $environment, array ...$attrs): string
@@ -92,6 +94,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param array<string, bool> $classes
+   *
    * @see HtmlBuilder::buildClasses
    */
   private static function buildClasses(Environment $environment, array $classes): string
@@ -111,6 +114,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param "anonymous"|"use-credentials"|null $crossorigin
+   *
    * @see HtmlBuilder::buildStylesheet
    */
   private static function buildStylesheet(
@@ -127,6 +131,7 @@ final class HtmlExtension extends AbstractExtension
   /**
    * @param "module"|null $type A script type ("media").
    * @param "anonymous"|"use-credentials"|null $crossorigin
+   *
    * @see HtmlBuilder::buildScript
    */
   private static function buildScript(
@@ -147,8 +152,10 @@ final class HtmlExtension extends AbstractExtension
    *   integrity?: string,
    *   crossorigin?: string,
    * }
+   *
    * @param array<value-of<HtmlBuilder::PRELOAD_TYPES>, string|list<string|FullResource>> $preloads
    * @param list<string> $preconnect_hosts
+   *
    * @see HtmlBuilder::buildPreloadLinks
    */
   private static function buildPreloadLinks(
@@ -162,6 +169,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param array<string, string> $entries
+   *
    * @see HtmlBuilder::buildSrcSet
    */
   private static function buildSrcSet(Environment $environment, array $entries): string
@@ -173,6 +181,7 @@ final class HtmlExtension extends AbstractExtension
   /**
    * @param array<string, mixed> $context
    * @param 'page'|'step'|'location'|'date'|'time'|true $value The ARIA value for the referenced item.
+   *
    * @see HtmlBuilder::buildCurrentUrlAttr
    */
   private static function buildCurrentUrlAttr(
@@ -208,6 +217,7 @@ final class HtmlExtension extends AbstractExtension
   /**
    * @param callable(string $attribute_value, string $attribute_name):string $transformer
    * @param list<string> $additional_attributes
+   *
    * @see HtmlBuilder::mapHtmlIds
    */
   private static function mapHtmlIds(
@@ -222,6 +232,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param list<string> $additional_attributes
+   *
    * @see HtmlBuilder::mapHtmlIds
    */
   private static function prefixHtmlIds(
@@ -241,6 +252,7 @@ final class HtmlExtension extends AbstractExtension
 
   /**
    * @param array<string, string> $parameters
+   *
    * @see HtmlBuilder::generateDataUri
    */
   private static function generateDataUri(

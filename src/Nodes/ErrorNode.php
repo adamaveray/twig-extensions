@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Nodes;
@@ -32,6 +33,7 @@ final class ErrorNode extends Node
       $compiler->raw('0, ')->subcompile($this->getNode('severity'));
     }
     $compiler->raw(');' . "\n");
+
     //    $compiler->addDebugInfo($this)->raw('\\trigger_error(')->subcompile($this->getNode('message'))->raw(', ');
     //    if ($this->hasNode('severity')) {
     //      $compiler->subcompile($this->getNode('severity'));

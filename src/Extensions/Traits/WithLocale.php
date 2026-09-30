@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions\Traits;
@@ -25,7 +26,6 @@ trait WithLocale
 
   /**
    * @param array<string, mixed> $context
-   * @return string
    */
   final protected function inferLocale(array $context): string
   {

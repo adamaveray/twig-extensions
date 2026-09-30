@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Assertions;
@@ -10,6 +11,9 @@ use Averay\TwigExtensions\TokenParsers\ErrorTokenParser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Twig\Error\RuntimeError;
 
+/**
+ * @internal
+ */
 #[CoversClass(AssertionsExtension::class)]
 #[CoversClass(ErrorTokenParser::class)]
 #[CoversClass(ErrorNode::class)]
@@ -18,12 +22,11 @@ final class ErrorTest extends TestCase
   public function testError(): void
   {
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {% error "Test error." %}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {% error "Test error." %}
+        world
+        TWIG,
       [new AssertionsExtension()],
     );
 
@@ -32,20 +35,21 @@ final class ErrorTest extends TestCase
         $environment->render('template');
       },
       test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
-      testPrevious: static fn(\Throwable|null $previous): bool => $previous instanceof \ErrorException &&
-        $previous->getMessage() === 'Test error.',
+      testPrevious: static fn(?\Throwable $previous): bool => (
+        $previous instanceof \ErrorException
+        && $previous->getMessage() === 'Test error.'
+      ),
     );
   }
 
   public function testErrorWithLevel(): void
   {
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {% error "Test error." constant("\\E_USER_ERROR") %}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {% error "Test error." constant("\E_USER_ERROR") %}
+        world
+        TWIG,
       [new AssertionsExtension()],
     );
 
@@ -54,9 +58,11 @@ final class ErrorTest extends TestCase
         $environment->render('template');
       },
       test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
-      testPrevious: static fn(\Throwable|null $previous): bool => $previous instanceof \ErrorException &&
-        $previous->getMessage() === 'Test error.' &&
-        $previous->getSeverity() === \E_USER_ERROR,
+      testPrevious: static fn(?\Throwable $previous): bool => (
+        $previous instanceof \ErrorException
+        && $previous->getMessage() === 'Test error.'
+        && $previous->getSeverity() === \E_USER_ERROR
+      ),
     );
   }
 }

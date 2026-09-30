@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Nodes\Tests;
@@ -10,9 +11,15 @@ use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class SameDateAsTest extends TestExpression
 {
   private const string DEFAULT_DATETIME_FORMAT = \DateTimeInterface::ATOM;
+
   private ?string $defaultFormat;
 
   public function __construct(Node $node, TwigTest|string $test, ?Node $arguments, int $lineno)
@@ -76,11 +83,10 @@ final class SameDateAsTest extends TestExpression
     \DateTimeZone $defaultTimezone,
   ): void {
     // Convert to immutable
-    self::compileToVariable(
-      $compiler,
-      $datetimeVarName,
-      static fn() => $compiler->raw('\\DateTimeImmutable::createFromInterface(')->subcompile($node)->raw(')'),
-    );
+    self::compileToVariable($compiler, $datetimeVarName, static fn() => $compiler
+      ->raw('\\DateTimeImmutable::createFromInterface(')
+      ->subcompile($node)
+      ->raw(')'));
 
     // Convert to timezone
     $compiler->raw('->setTimezone(');
@@ -91,11 +97,9 @@ final class SameDateAsTest extends TestExpression
       self::compileTernary(
         $compiler,
         // If is DateTimeZone instance...
-        if: static fn() => self::compileToVariable(
-          $compiler,
-          $timezoneVarName,
-          static fn() => $compiler->subcompile($timezoneNode),
-        )->raw(' instanceof \\DateTimeZone'),
+        if: static fn() => self::compileToVariable($compiler, $timezoneVarName, static fn() => $compiler->subcompile(
+          $timezoneNode,
+        ))->raw(' instanceof \\DateTimeZone'),
         // ...then use value
         then: static fn() => $compiler->raw('$' . $timezoneVarName),
         // ...else
@@ -134,8 +138,8 @@ final class SameDateAsTest extends TestExpression
   }
 
   /**
-   * @param string|null $variableName
    * @param-out string $variableName
+   *
    * @param callable(Compiler):mixed $fn
    */
   private static function compileToVariable(Compiler $compiler, ?string &$variableName, callable $fn): Compiler
@@ -149,6 +153,7 @@ final class SameDateAsTest extends TestExpression
 
   /**
    * @psalm-type Fn = callable(Compiler $compiler):(mixed|void)
+   *
    * @param Fn $if
    * @param Fn $then
    * @param Fn $else

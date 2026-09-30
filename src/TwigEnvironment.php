@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions;
@@ -7,8 +8,6 @@ use Averay\TwigExtensions\Bundles\ExtensionBundleInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Cache\CacheInterface;
 use Twig\Extension\ExtensionInterface;
-use Twig\Extension\GlobalsInterface;
-use Twig\Extra as TwigExtra;
 use Twig\Loader\LoaderInterface;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\RuntimeLoader\ContainerRuntimeLoader;
@@ -41,14 +40,7 @@ class TwigEnvironment extends \Twig\Environment
    */
   public function __construct(LoaderInterface $loader, array $options = [])
   {
-    $options = \array_merge(
-      [
-        'container' => null,
-        'strict_variables' => true,
-        'use_yield' => true,
-      ],
-      $options,
-    );
+    $options = ['container' => null, 'strict_variables' => true, 'use_yield' => true, ...$options];
 
     $container = $options['container'];
     unset($options['container']);

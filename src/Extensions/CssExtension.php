@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -42,7 +43,7 @@ final class CssExtension extends AbstractExtension
   }
 
   /**
-   * @param array<string, string | list<string>> $properties
+   * @param array<string, string|list<string>> $properties
    */
   private function buildProperties(Environment $environment, array $properties): string
   {

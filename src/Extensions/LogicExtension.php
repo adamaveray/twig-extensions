@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -16,9 +17,10 @@ final class LogicExtension extends AbstractExtension
 
   /**
    * @template TChoices of array
+   *
    * @param key-of<TChoices> $value
    * @param TChoices $cases
-   * @param bool $strict
+   *
    * @return ($strict is true ? value-of<TChoices> : value-of<TChoices>|null)
    */
   private static function filterMatch(mixed $value, array $cases, bool $strict = true): mixed

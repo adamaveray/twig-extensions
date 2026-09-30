@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Others;
@@ -13,6 +14,9 @@ use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 #[CoversTrait(WithLocale::class)]
 #[CoversTrait(WithSymfonyApp::class)]
 final class LocaleTraitTest extends TestCase
@@ -75,7 +79,7 @@ final class LocaleTraitTest extends TestCase
 
   private static function makeTraitInstance(string|TranslatorInterface|null $translatorOrLocale): object
   {
-    return new class ($translatorOrLocale) {
+    return new class($translatorOrLocale) {
       use WithLocale;
 
       public function __construct(string|TranslatorInterface|null $translatorOrLocale)

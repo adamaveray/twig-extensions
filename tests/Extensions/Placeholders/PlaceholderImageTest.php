@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Placeholders;
@@ -12,8 +13,12 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DependsOnClass;
 use Symfony\Component\Mime\MimeTypes;
+
 use function Symfony\Component\String\u;
 
+/**
+ * @internal
+ */
 #[CoversClass(PlaceholdersExtension::class)]
 #[CoversClass(AssertionsExtension::class)]
 #[CoversClass(AssertNode::class)]
@@ -25,14 +30,12 @@ final class PlaceholderImageTest extends TestCase
     $width = 500;
     $height = 350;
 
-    $environment = self::makeEnvironment(
-      <<<TWIG
+    $environment = self::makeEnvironment(<<<'TWIG'
       {{- placeholder_image_url(width: width, height: height) -}}
-      TWIG
-      ,
-      extensions: [new AssertionsExtension(), new PlaceholdersExtension(null)],
-      runtimeResources: [HtmlBuilder::class => new HtmlBuilder(new MimeTypes())],
-    );
+      TWIG, extensions: [
+      new AssertionsExtension(),
+      new PlaceholdersExtension(null),
+    ], runtimeResources: [HtmlBuilder::class => new HtmlBuilder(new MimeTypes())]);
 
     $dataUriPrefix = 'data:image/svg+xml,';
     $result = $environment->render('template', ['width' => $width, 'height' => $height]);

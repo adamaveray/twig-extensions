@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Strings;
@@ -16,8 +17,12 @@ use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\TwigFunction;
+
 use function Symfony\Component\String\s;
 
+/**
+ * @internal
+ */
 #[CoversClass(StringsExtension::class)]
 final class StringsBasicTest extends TestCase
 {
@@ -26,9 +31,8 @@ final class StringsBasicTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- get_class(string | $filter) -}}
-      TWIG
-      ,
+        {{- get_class(string | {$filter}) -}}
+        TWIG,
       [new StringsExtension()],
     );
     $environment->addFunction(new TwigFunction('get_class', \get_class(...)));
@@ -106,19 +110,19 @@ final class StringsBasicTest extends TestCase
   {
     $filters = ['markdown', 'markdown_to_html'];
     $inputIndented = <<<'TXT'
-        Hello world.
+          Hello world.
 
-            This is a code block.
+              This is a code block.
 
-        This is a paragraph.
-    TXT;
+          This is a paragraph.
+      TXT;
     $inputOutdented = <<<'TXT'
-    Hello world.
+      Hello world.
 
-        This is a code block.
+          This is a code block.
 
-    This is a paragraph.
-    TXT;
+      This is a paragraph.
+      TXT;
     $output = '<p>HTML</p>';
 
     $loader = $this->createMockMarkdownLoader($inputOutdented, $output, $filters);
@@ -169,14 +173,9 @@ final class StringsBasicTest extends TestCase
       ->with($input, $expectedSeparator, $expectedLocale)
       ->willReturn($outputString);
 
-    $environment = self::makeEnvironment(
-      <<<TWIG
-      {{- string | slug($twigParameters) -}}
-      TWIG
-      ,
-      [new StringsExtension($locale)],
-      [SluggerInterface::class => $slugger],
-    );
+    $environment = self::makeEnvironment(<<<TWIG
+      {{- string | slug({$twigParameters}) -}}
+      TWIG, [new StringsExtension($locale)], [SluggerInterface::class => $slugger]);
 
     self::assertRenders($output, $environment, context: ['string' => $input]);
   }
@@ -245,70 +244,62 @@ final class StringsBasicTest extends TestCase
   {
     yield 'No indentation' => [
       'expected' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-      Lorem ipsum.
-      TXT
-      ,
+        Lorem ipsum.
+        TXT,
       'string' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-      Lorem ipsum.
-      TXT
-    ,
+        Lorem ipsum.
+        TXT,
     ];
 
     yield 'Internal indentation only' => [
       'expected' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-        An indented line.
+          An indented line.
 
-      Lorem ipsum.
-      TXT
-      ,
+        Lorem ipsum.
+        TXT,
       'string' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-        An indented line.
+          An indented line.
 
-      Lorem ipsum.
-      TXT
-    ,
+        Lorem ipsum.
+        TXT,
     ];
 
     yield 'Full indentation' => [
       'expected' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-      Lorem ipsum.
-      TXT
-      ,
+        Lorem ipsum.
+        TXT,
       'string' => <<<'TXT'
-          Hello world.
+            Hello world.
 
-          Lorem ipsum.
-      TXT
-    ,
+            Lorem ipsum.
+        TXT,
     ];
 
     yield 'Full indentation with internal indentation' => [
       'expected' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-        An indented line.
+          An indented line.
 
-      Lorem ipsum.
-      TXT
-      ,
+        Lorem ipsum.
+        TXT,
       'string' => <<<'TXT'
-          Hello world.
+            Hello world.
 
-            An indented line.
+              An indented line.
 
-          Lorem ipsum.
-      TXT
-    ,
+            Lorem ipsum.
+        TXT,
     ];
   }
 
@@ -318,7 +309,10 @@ final class StringsBasicTest extends TestCase
   private function createMockMarkdownLoader(string $input, string $output, array $filters): RuntimeLoaderInterface
   {
     $renderedContent = $this->createMock(RenderedContentInterface::class);
-    $renderedContent->expects($this->exactly(\count($filters)))->method('__toString')->willReturn($output);
+    $renderedContent
+      ->expects($this->exactly(\count($filters)))
+      ->method('__toString')
+      ->willReturn($output);
 
     $converter = $this->createMock(ConverterInterface::class);
     $converter

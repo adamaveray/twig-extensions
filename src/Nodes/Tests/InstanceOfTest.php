@@ -1,12 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Nodes\Tests;
 
 use Twig\Compiler;
 use Twig\Node\Expression\TestExpression;
-use Twig\Node\Node;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InstanceOfTest extends TestExpression
 {
   #[\Override]

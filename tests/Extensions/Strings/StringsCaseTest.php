@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Strings;
@@ -7,8 +8,12 @@ use Averay\TwigExtensions\Extensions\StringsExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+
 use function Symfony\Component\String\u;
 
+/**
+ * @internal
+ */
 #[CoversClass(StringsExtension::class)]
 final class StringsCaseTest extends TestCase
 {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Html;
@@ -13,6 +14,9 @@ use Symfony\Component\Mime\MimeTypes;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @internal
+ */
 #[CoversClass(HtmlExtension::class)]
 final class HtmlFiltersTest extends TestCase
 {
@@ -68,21 +72,19 @@ final class HtmlFiltersTest extends TestCase
     yield 'Multiple paragraphs' => [
       'expected' => '<p>Hello world.</p><p>Second paragraph.</p>',
       'string' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-      Second paragraph.
-      TXT
-    ,
+        Second paragraph.
+        TXT,
     ];
 
     yield 'Custom tag' => [
       'expected' => '<div class="wrapper">Hello world.</div><div class="wrapper">Second paragraph.</div>',
       'string' => <<<'TXT'
-      Hello world.
+        Hello world.
 
-      Second paragraph.
-      TXT
-      ,
+        Second paragraph.
+        TXT,
       'wrappingTag' => '<div class="wrapper">',
     ];
   }
@@ -139,57 +141,51 @@ final class HtmlFiltersTest extends TestCase
 
     yield 'No IDs' => [
       'expected' => <<<'HTML'
-      <div>
-        <h1>Test heading.</h1>
-        <p>Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div>
+          <h1>Test heading.</h1>
+          <p>Test paragraph.</p>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div>
-        <h1>Test heading.</h1>
-        <p>Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div>
+          <h1>Test heading.</h1>
+          <p>Test paragraph.</p>
+        </div>
+        HTML,
       'parameters' => $transformer,
     ];
 
     yield 'With IDs' => [
       'expected' => <<<'HTML'
-      <div id="new-intro-value" class="section" aria-labelledby="new-section-title-value">
-        <h1 id="new-section-title-value">Test heading.</h1>
-        <p id="new-section-paragraph-value" class="lede">Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div id="new-intro-value" class="section" aria-labelledby="new-section-title-value">
+          <h1 id="new-section-title-value">Test heading.</h1>
+          <p id="new-section-paragraph-value" class="lede">Test paragraph.</p>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div id="intro" class="section" aria-labelledby="section-title">
-        <h1 id="section-title">Test heading.</h1>
-        <p id="section-paragraph" class="lede">Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div id="intro" class="section" aria-labelledby="section-title">
+          <h1 id="section-title">Test heading.</h1>
+          <p id="section-paragraph" class="lede">Test paragraph.</p>
+        </div>
+        HTML,
       'parameters' => $transformer,
     ];
 
     yield 'With IDs & custom attributes' => [
       'expected' => <<<'HTML'
-      <div id="new-intro-value" class="section" aria-labelledby="new-section-title-value">
-        <h1 id="new-section-title-value">Test heading.</h1>
-        <p id="new-section-paragraph-value" class="lede">Test paragraph.</p>
-        <button data-target="new-intro-value">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="new-intro-value" class="section" aria-labelledby="new-section-title-value">
+          <h1 id="new-section-title-value">Test heading.</h1>
+          <p id="new-section-paragraph-value" class="lede">Test paragraph.</p>
+          <button data-target="new-intro-value">Test button.</button>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div id="intro" class="section" aria-labelledby="section-title">
-        <h1 id="section-title">Test heading.</h1>
-        <p id="section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="intro" class="section" aria-labelledby="section-title">
+          <h1 id="section-title">Test heading.</h1>
+          <p id="section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'parameters' => $transformer . ', additional_attributes: ["data-target"]',
     ];
   }
@@ -212,79 +208,71 @@ final class HtmlFiltersTest extends TestCase
 
     yield 'No IDs' => [
       'expected' => <<<'HTML'
-      <div>
-        <h1>Test heading.</h1>
-        <p>Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div>
+          <h1>Test heading.</h1>
+          <p>Test paragraph.</p>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div>
-        <h1>Test heading.</h1>
-        <p>Test paragraph.</p>
-      </div>
-      HTML
-      ,
+        <div>
+          <h1>Test heading.</h1>
+          <p>Test paragraph.</p>
+        </div>
+        HTML,
       'parameters' => $prefix,
     ];
 
     yield 'With IDs' => [
       'expected' => <<<'HTML'
-      <div id="prefixed-intro" class="section" aria-labelledby="prefixed-section-title">
-        <h1 id="prefixed-section-title">Test heading.</h1>
-        <p id="prefixed-section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="prefixed-intro" class="section" aria-labelledby="prefixed-section-title">
+          <h1 id="prefixed-section-title">Test heading.</h1>
+          <p id="prefixed-section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div id="intro" class="section" aria-labelledby="section-title">
-        <h1 id="section-title">Test heading.</h1>
-        <p id="section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="intro" class="section" aria-labelledby="section-title">
+          <h1 id="section-title">Test heading.</h1>
+          <p id="section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'parameters' => $prefix,
     ];
 
     yield 'With IDs & custom separator' => [
       'expected' => <<<'HTML'
-      <div id="prefixed__intro" class="section" aria-labelledby="prefixed__section-title">
-        <h1 id="prefixed__section-title">Test heading.</h1>
-        <p id="prefixed__section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="prefixed__intro" class="section" aria-labelledby="prefixed__section-title">
+          <h1 id="prefixed__section-title">Test heading.</h1>
+          <p id="prefixed__section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div id="intro" class="section" aria-labelledby="section-title">
-        <h1 id="section-title">Test heading.</h1>
-        <p id="section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="intro" class="section" aria-labelledby="section-title">
+          <h1 id="section-title">Test heading.</h1>
+          <p id="section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'parameters' => $prefix . ', separator: "__"',
     ];
 
     yield 'With IDs & custom attributes' => [
       'expected' => <<<'HTML'
-      <div id="prefixed-intro" class="section" aria-labelledby="prefixed-section-title">
-        <h1 id="prefixed-section-title">Test heading.</h1>
-        <p id="prefixed-section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="prefixed-intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="prefixed-intro" class="section" aria-labelledby="prefixed-section-title">
+          <h1 id="prefixed-section-title">Test heading.</h1>
+          <p id="prefixed-section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="prefixed-intro">Test button.</button>
+        </div>
+        HTML,
       'html' => <<<'HTML'
-      <div id="intro" class="section" aria-labelledby="section-title">
-        <h1 id="section-title">Test heading.</h1>
-        <p id="section-paragraph" class="lede">Test paragraph.</p>
-        <button data-target="intro">Test button.</button>
-      </div>
-      HTML
-      ,
+        <div id="intro" class="section" aria-labelledby="section-title">
+          <h1 id="section-title">Test heading.</h1>
+          <p id="section-paragraph" class="lede">Test paragraph.</p>
+          <button data-target="intro">Test button.</button>
+        </div>
+        HTML,
       'parameters' => $prefix . ', additional_attributes: ["data-target"]',
     ];
   }
@@ -329,20 +317,20 @@ final class HtmlFiltersTest extends TestCase
     ];
 
     yield 'Preset binary' => [
-      'expected' => 'data:unknown/test;base64,' . base64_encode('Hello world.'),
+      'expected' => 'data:unknown/test;base64,' . \base64_encode('Hello world.'),
       'data' => 'Hello world.',
       'parameters' => 'mime: "unknown/test"',
     ];
 
     yield 'Inferred type' => [
-      'expected' => 'data:foo/bar;base64,' . base64_encode('Hello world.'),
+      'expected' => 'data:foo/bar;base64,' . \base64_encode('Hello world.'),
       'data' => 'Hello world.',
       'parameters' => '',
       'inferredMimeType' => 'foo/bar',
     ];
 
     yield 'Custom parameters' => [
-      'expected' => 'data:unknown/test;foo=bar;base64,' . base64_encode('Hello world.'),
+      'expected' => 'data:unknown/test;foo=bar;base64,' . \base64_encode('Hello world.'),
       'data' => 'Hello world.',
       'parameters' => 'mime: "unknown/test", parameters: { foo: "bar" }',
     ];

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Html;
@@ -14,6 +15,9 @@ use Symfony\Component\Mime\MimeTypes;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @internal
+ */
 #[CoversClass(HtmlExtension::class)]
 final class HtmlFunctionsTest extends TestCase
 {
@@ -83,19 +87,16 @@ final class HtmlFunctionsTest extends TestCase
   {
     yield 'Basic' => [
       'expected' => <<<'HTML'
-      <link rel="stylesheet" href="stylesheet.css"/>
-      HTML
-      ,
+        <link rel="stylesheet" href="stylesheet.css"/>
+        HTML,
       'parameters' => '"stylesheet.css"',
     ];
 
     yield 'With attributes' => [
       'expected' => <<<'HTML'
-      <link rel="stylesheet" href="stylesheet.css" media="example-media" integrity="example-hash" crossorigin="example-crossorigin"/>
-      HTML
-      ,
-      'parameters' =>
-        '"stylesheet.css", media: "example-media", integrity: "example-hash", crossorigin: "example-crossorigin"',
+        <link rel="stylesheet" href="stylesheet.css" media="example-media" integrity="example-hash" crossorigin="example-crossorigin"/>
+        HTML,
+      'parameters' => '"stylesheet.css", media: "example-media", integrity: "example-hash", crossorigin: "example-crossorigin"',
     ];
   }
 
@@ -110,19 +111,16 @@ final class HtmlFunctionsTest extends TestCase
   {
     yield 'Basic' => [
       'expected' => <<<'HTML'
-      <script src="script.js"></script>
-      HTML
-      ,
+        <script src="script.js"></script>
+        HTML,
       'parameters' => '"script.js"',
     ];
 
     yield 'With attributes' => [
       'expected' => <<<'HTML'
-      <script src="script.js" type="module" async integrity="example-hash" crossorigin="example-crossorigin"></script>
-      HTML
-      ,
-      'parameters' =>
-        '"script.js", type: "module", async: true, integrity: "example-hash", crossorigin: "example-crossorigin"',
+        <script src="script.js" type="module" async integrity="example-hash" crossorigin="example-crossorigin"></script>
+        HTML,
+      'parameters' => '"script.js", type: "module", async: true, integrity: "example-hash", crossorigin: "example-crossorigin"',
     ];
   }
 
@@ -146,9 +144,8 @@ final class HtmlFunctionsTest extends TestCase
         '<link rel="preload" href="style.css" as="style"/>',
       ]),
       'parameters' => <<<'TWIG'
-      preloads: { script: "script.js", style: ["style.css"] }
-      TWIG
-    ,
+        preloads: { script: "script.js", style: ["style.css"] }
+        TWIG,
     ];
 
     yield 'Preconnects only' => [
@@ -157,10 +154,9 @@ final class HtmlFunctionsTest extends TestCase
         '<link rel="preconnect" href="example.org"/>',
       ]),
       'parameters' => <<<'TWIG'
-      {},
-      preconnect_hosts: ["example.com", "example.org"]
-      TWIG
-    ,
+        {},
+        preconnect_hosts: ["example.com", "example.org"]
+        TWIG,
     ];
 
     yield 'Both' => [
@@ -171,10 +167,9 @@ final class HtmlFunctionsTest extends TestCase
         '<link rel="preconnect" href="example.org"/>',
       ]),
       'parameters' => <<<'TWIG'
-      preloads: { script: "script.js", style: ["style.css"] },
-      preconnect_hosts: ["example.com", "example.org"]
-      TWIG
-    ,
+        preloads: { script: "script.js", style: ["style.css"] },
+        preconnect_hosts: ["example.com", "example.org"]
+        TWIG,
     ];
 
     yield 'With attributes' => [
@@ -185,17 +180,16 @@ final class HtmlFunctionsTest extends TestCase
         '<link rel="preconnect" href="example.org"/>',
       ]),
       'parameters' => <<<'TWIG'
-      preloads: {
-        script: [
-          { url: "script.js", integrity: "example-hash-1", crossorigin: "example-crossorigin-1" },
-        ],
-        style: [
-          { url: "style.css", integrity: "example-hash-2", crossorigin: "example-crossorigin-2" },
-        ],
-      },
-      preconnect_hosts: ["example.com", "example.org"]
-      TWIG
-    ,
+        preloads: {
+          script: [
+            { url: "script.js", integrity: "example-hash-1", crossorigin: "example-crossorigin-1" },
+          ],
+          style: [
+            { url: "style.css", integrity: "example-hash-2", crossorigin: "example-crossorigin-2" },
+          ],
+        },
+        preconnect_hosts: ["example.com", "example.org"]
+        TWIG,
     ];
   }
 
@@ -216,32 +210,29 @@ final class HtmlFunctionsTest extends TestCase
     yield 'Single' => [
       'expected' => 'image.jpg 1x',
       'parameters' => <<<'TWIG'
-      { "image.jpg": "1x" }
-      TWIG
-    ,
+        { "image.jpg": "1x" }
+        TWIG,
     ];
 
     yield 'Densities' => [
       'expected' => 'image@3x.jpg 3x, image@2x.jpg 2x, image.jpg 1x',
       'parameters' => <<<'TWIG'
-      {
-        "image@3x.jpg": "3x",
-        "image@2x.jpg": "2x",
-        "image.jpg": "1x",
-      }
-      TWIG
-    ,
+        {
+          "image@3x.jpg": "3x",
+          "image@2x.jpg": "2x",
+          "image.jpg": "1x",
+        }
+        TWIG,
     ];
 
     yield 'Widths' => [
       'expected' => 'large.jpg 500px, small.jpg 200px',
       'parameters' => <<<'TWIG'
-      {
-        "large.jpg": "500px",
-        "small.jpg": "200px"
-      }
-      TWIG
-    ,
+        {
+          "large.jpg": "500px",
+          "small.jpg": "200px"
+        }
+        TWIG,
     ];
   }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Others;
@@ -19,6 +20,9 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
+/**
+ * @internal
+ */
 #[CoversClass(TwigEnvironment::class)]
 final class TwigEnvironmentTest extends TestCase
 {
@@ -84,7 +88,7 @@ final class TwigEnvironmentTest extends TestCase
     $environment->addBundles($additionalBundles);
 
     self::assertContainsAll(
-      \array_merge($additionalExtensionSets['one'], $additionalExtensionSets['two']),
+      [...$additionalExtensionSets['one'], ...$additionalExtensionSets['two']],
       $environment->getExtensions(),
       'The bundled extensions should be loaded.',
     );

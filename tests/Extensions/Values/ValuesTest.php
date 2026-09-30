@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Values;
@@ -9,6 +10,9 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+/**
+ * @internal
+ */
 #[CoversClass(ValuesExtension::class)]
 #[CoversClass(InstanceOfTest::class)]
 final class ValuesTest extends TestCase
@@ -46,15 +50,14 @@ final class ValuesTest extends TestCase
 
     yield 'Pretty printed' => [
       'expected' => <<<'TXT'
-      {
-          "a": 1,
-          "b": 2,
-          "c": 3
-      }
-      TXT
-      ,
+        {
+            "a": 1,
+            "b": 2,
+            "c": 3
+        }
+        TXT,
       'value' => '{ a: 1, b: 2, c: 3 }',
-      'parameters' => 'flags: constant("\JSON_PRETTY_PRINT")',
+      'parameters' => 'flags: constant("\\JSON_PRETTY_PRINT")',
     ];
   }
 

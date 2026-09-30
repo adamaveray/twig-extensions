@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\TokenParsers;
@@ -17,7 +18,7 @@ final class AssertTokenParser extends AbstractTokenParser
   }
 
   #[\Override]
-  public function parse(Token $token): Node\Node
+  public function parse(#[\SensitiveParameter] Token $token): Node\Node
   {
     $parser = $this->parser;
     $stream = $parser->getStream();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Logic;
@@ -9,27 +10,29 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Error\RuntimeError;
 
+/**
+ * @internal
+ */
 #[CoversClass(LogicExtension::class)]
 final class LogicTest extends TestCase
 {
   #[DataProvider('matchDataProvider')]
   public function testMatch(string $expected, mixed $value, string $parameters): void
   {
-    $environment = self::makeEnvironment(
-      '{{- value | match(' . $parameters . ') -}}',
-      extensions: [new LogicExtension()],
-    );
+    $environment = self::makeEnvironment('{{- value | match('
+    . $parameters
+    . ') -}}', extensions: [new LogicExtension()]);
     self::assertRenders($expected, $environment, context: ['value' => $value]);
   }
 
   public static function matchDataProvider(): iterable
   {
     $cases = <<<'TWIG'
-    {
-      "first-item": "First item.",
-      "second-item": "Second item.",
-    }
-    TWIG;
+      {
+        "first-item": "First item.",
+        "second-item": "Second item.",
+      }
+      TWIG;
 
     yield 'Match first' => [
       'expected' => 'First item.',
@@ -52,10 +55,7 @@ final class LogicTest extends TestCase
 
   public function testMatchFailsWhenNoMatchAndStrict(): void
   {
-    $environment = self::makeEnvironment(
-      '{{- value | match(cases, strict: true) -}}',
-      extensions: [new LogicExtension()],
-    );
+    $environment = self::makeEnvironment('{{- value | match(cases, strict: true) -}}', extensions: [new LogicExtension()]);
 
     $this->expectException(RuntimeError::class);
     $this->expectExceptionMessageMatches('~Value not found in choices.~');

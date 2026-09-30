@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -45,12 +46,12 @@ final class DumpExtension extends AbstractExtension
 
     $showLabels = \count($vars) !== 1 || !\array_is_list($vars);
 
-    ob_start();
+    \ob_start();
     /** @psalm-suppress MixedAssignment */
     foreach ($vars as $label => $var) {
       $this->dumper->dumpValue($var, label: $showLabels ? (string) $label : null);
     }
-    $result = ob_get_clean();
+    $result = \ob_get_clean();
     \assert(\is_string($result));
     return $result;
   }

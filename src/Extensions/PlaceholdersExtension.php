@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -19,7 +20,7 @@ final class PlaceholdersExtension extends AbstractExtension
 
   private const string PATH_IMAGE_TEMPLATE = __DIR__ . '/../../views/placeholders/placeholder-image.svg.twig';
 
-  /** @var array<string, Generator> $generators Keys are locales. */
+  /** @var array<string, Generator> Keys are locales. */
   private array $generators = [];
 
   private ?TemplateWrapper $placeholderImageTemplate = null;
@@ -104,9 +105,11 @@ final class PlaceholdersExtension extends AbstractExtension
       $templateContent = \file_get_contents(self::PATH_IMAGE_TEMPLATE);
       if ($templateContent === false) {
         // @codeCoverageIgnoreStart
-        throw new \RuntimeException(
-          \sprintf('Failed reading placeholder image template file "%s".', self::PATH_IMAGE_TEMPLATE),
-        );
+        throw new \RuntimeException(\sprintf(
+          'Failed reading placeholder image template file "%s".',
+          self::PATH_IMAGE_TEMPLATE,
+        ));
+
         // @codeCoverageIgnoreEnd
       }
       $this->placeholderImageTemplate = $environment->createTemplate($templateContent);
@@ -123,9 +126,12 @@ final class PlaceholdersExtension extends AbstractExtension
 
   /**
    * @psalm-type Color = array{ r: int, g: int, b: int }
+   *
    * @param positive-int $count How many colours to generate.
    * @param positive-int $distance How far from the internal seed colour each colour can be.
+   *
    * @return list<Color>
+   *
    * @throws \Random\RandomException
    */
   private static function generateRandomColorField(int $count, int $distance = 250): array
@@ -135,7 +141,7 @@ final class PlaceholdersExtension extends AbstractExtension
       return \max(0, \min(255, $value));
     };
 
-    $hash = \md5('color-' . \random_int(0, 99999999));
+    $hash = \md5('color-' . \random_int(0, 99_999_999));
     $seed = [
       'r' => (int) \hexdec(\substr($hash, 0, 2)),
       'g' => (int) \hexdec(\substr($hash, 2, 2)),

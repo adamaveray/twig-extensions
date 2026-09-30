@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -40,7 +41,7 @@ final class ArraysExtension extends AbstractExtension
    */
   private static function filterSort(
     array|\Traversable $array,
-    callable|null $arrow = null,
+    ?callable $arrow = null,
     string $by = 'value',
     bool $preserve_keys = true,
   ): array {
@@ -88,14 +89,16 @@ final class ArraysExtension extends AbstractExtension
 
   private static function filterAppend(array $array, mixed ...$values): array
   {
-    return \array_merge($array, $values);
+    return [...$array, ...$values];
   }
 
   /**
    * @template T of array
    * @template TOthers of array
+   *
    * @param T $target
    * @param TOthers ...$arrays
+   *
    * @return T&TOthers
    */
   private static function filterMergeExisting(array $target, array ...$arrays): array
@@ -114,8 +117,10 @@ final class ArraysExtension extends AbstractExtension
 
   /**
    * @template T of array
+   *
    * @param T $target
    * @param list<key-of<T>> $keys
+   *
    * @return T
    */
   private static function filterOmit(array $target, array $keys): array
@@ -128,8 +133,10 @@ final class ArraysExtension extends AbstractExtension
 
   /**
    * @template T of array
+   *
    * @param T $target
    * @param list<key-of<T>> $keys
+   *
    * @return T
    */
   private static function filterPick(array $target, array $keys, bool $strict = true): array
@@ -154,9 +161,12 @@ final class ArraysExtension extends AbstractExtension
   /**
    * @template TIn of array
    * @template TOut of array
+   *
    * @param TIn $array
    * @param callable(key-of<TIn> $key, value-of<TIn> $value):list{ key-of<TOut>, value-of<TOut> } $callback
+   *
    * @return TOut
+   *
    * @psalm-suppress MixedArgument,MixedAssignment,InvalidArgument This method is too complicated to keep Psalm happy.
    */
   private static function filterMapEntries(array $array, callable $callback): array

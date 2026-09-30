@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Resources;
 
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -55,13 +55,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     array $context = [],
     string $message = '',
   ): void {
-    $environment = self::makeEnvironment(
-      <<<TWIG
-      {{- test_value | $filters -}}
-      TWIG
-      ,
-      $extensions,
-    );
+    $environment = self::makeEnvironment(<<<TWIG
+      {{- test_value | {$filters} -}}
+      TWIG, $extensions);
 
     self::assertRenders($expected, $environment, context: ['test_value' => $value] + $context, message: $message);
   }
@@ -73,17 +69,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     array $context,
     string $message = '',
   ): void {
-    $environment = self::makeEnvironment(
-      <<<TWIG
-      {%- if $statement -%}
+    $environment = self::makeEnvironment(<<<TWIG
+      {%- if {$statement} -%}
         yes
       {%- else -%}
         no
       {%- endif -%}
-      TWIG
-      ,
-      $extensions,
-    );
+      TWIG, $extensions);
 
     $result = $environment->render('template', $context);
     self::assertEquals($expected ? 'yes' : 'no', $result, $message);
@@ -103,7 +95,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     $loader = new \Twig\Loader\ArrayLoader(\is_array($templates) ? $templates : ['template' => $templates]);
     $environment = new Environment(
       $loader,
-      $options + [
+      $options
+      + [
         'strict_variables' => true,
         'debug' => true,
         'use_yield' => true,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Bundles;
@@ -14,8 +15,9 @@ use Twig\Profiler\Profile;
 
 final class DefaultBundle extends AbstractBundle
 {
-  public function __construct(private readonly ?TranslatorInterface $translator)
-  {
+  public function __construct(
+    private readonly ?TranslatorInterface $translator,
+  ) {
     $this->extensions = [
       // Twig-provided
       new CacheExtension(),
@@ -42,14 +44,14 @@ final class DefaultBundle extends AbstractBundle
     ?Profile $profile = null,
     ?TemplateDumperInterface $templateDumper = null,
     ?Stopwatch $profileStopwatch = null,
-  ): static {
+  ): self {
     return $this->withBundle(new DevelopmentExtension($stopwatch, $profile, $templateDumper, $profileStopwatch));
   }
 
   /**
    * @see IntlBundle
    */
-  public function withIntl(?\IntlDateFormatter $dateFormatter = null, ?\NumberFormatter $numberFormatter = null): static
+  public function withIntl(?\IntlDateFormatter $dateFormatter = null, ?\NumberFormatter $numberFormatter = null): self
   {
     return $this->withBundle(
       new IntlBundle(
@@ -63,7 +65,7 @@ final class DefaultBundle extends AbstractBundle
   /**
    * @see SymfonyBundle
    */
-  public function withSymfony(?AppVariable $appVariable, ?Packages $assetPackages): static
+  public function withSymfony(?AppVariable $appVariable, ?Packages $assetPackages): self
   {
     return $this->withBundle(new SymfonyBundle($appVariable, $this->translator, $assetPackages));
   }

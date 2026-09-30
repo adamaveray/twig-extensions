@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Assertions;
@@ -11,6 +12,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Error\RuntimeError;
 
+/**
+ * @internal
+ */
 #[CoversClass(AssertionsExtension::class)]
 #[CoversClass(AssertTokenParser::class)]
 #[CoversClass(AssertNode::class)]
@@ -21,11 +25,10 @@ final class AssertTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      Hello
-      {% assert $value %}
-      world
-      TWIG
-      ,
+        Hello
+        {% assert {$value} %}
+        world
+        TWIG,
       [new AssertionsExtension()],
     );
 
@@ -45,11 +48,10 @@ final class AssertTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      Hello
-      {% assert $value %}
-      world
-      TWIG
-      ,
+        Hello
+        {% assert {$value} %}
+        world
+        TWIG,
       [new AssertionsExtension()],
     );
 
@@ -58,7 +60,7 @@ final class AssertTest extends TestCase
         $environment->render('template');
       },
       test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
-      testPrevious: static fn(\Throwable|null $previous): bool => $previous instanceof \AssertionError,
+      testPrevious: static fn(?\Throwable $previous): bool => $previous instanceof \AssertionError,
     );
   }
 
@@ -72,12 +74,11 @@ final class AssertTest extends TestCase
   public function testAssertFalseWithMessage(): void
   {
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {% assert false "The test value must be true." %}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {% assert false "The test value must be true." %}
+        world
+        TWIG,
       [new AssertionsExtension()],
     );
 
@@ -86,8 +87,10 @@ final class AssertTest extends TestCase
         $environment->render('template');
       },
       test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
-      testPrevious: static fn(\Throwable|null $previous): bool => $previous instanceof \AssertionError &&
-        $previous->getMessage() === 'The test value must be true.',
+      testPrevious: static fn(?\Throwable $previous): bool => (
+        $previous instanceof \AssertionError
+        && $previous->getMessage() === 'The test value must be true.'
+      ),
     );
   }
 }

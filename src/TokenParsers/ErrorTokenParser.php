@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\TokenParsers;
 
+use Averay\TwigExtensions\Nodes\ErrorNode;
 use Twig\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
-use Averay\TwigExtensions\Nodes\ErrorNode;
 
 final class ErrorTokenParser extends AbstractTokenParser
 {
@@ -17,7 +18,7 @@ final class ErrorTokenParser extends AbstractTokenParser
   }
 
   #[\Override]
-  public function parse(Token $token): Node\Node
+  public function parse(#[\SensitiveParameter] Token $token): Node\Node
   {
     $parser = $this->parser;
     $stream = $parser->getStream();

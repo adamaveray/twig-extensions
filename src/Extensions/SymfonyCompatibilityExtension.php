@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -9,7 +10,9 @@ use Twig\Extension\GlobalsInterface;
 
 final class SymfonyCompatibilityExtension extends AbstractExtension implements GlobalsInterface
 {
-  public function __construct(private readonly ?AppVariable $appVariable) {}
+  public function __construct(
+    private readonly ?AppVariable $appVariable,
+  ) {}
 
   /**
    * @return array<string, mixed>

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Loaders;
@@ -43,7 +44,7 @@ class NamespacedFilesystemLoader extends FilesystemLoader
 
   /**
    * @param string|list<string> $paths
-   * @param string $namespace
+   *
    * @psalm-suppress MoreSpecificImplementedParamType Library uses ambiguous array syntax but expects a list.
    */
   #[\Override]

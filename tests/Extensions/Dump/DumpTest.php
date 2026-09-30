@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Dump;
@@ -10,6 +11,9 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+/**
+ * @internal
+ */
 #[CoversClass(DumpExtension::class)]
 #[CoversClass(TemplateDumper::class)]
 final class DumpTest extends TestCase
@@ -19,12 +23,11 @@ final class DumpTest extends TestCase
     $dumper = self::createStubDumper([0 => 'hello', 1 => 'world'], '%%dump-output%%');
 
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {{ dump("hello", "world") }}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {{ dump("hello", "world") }}
+        world
+        TWIG,
       [new DumpExtension($dumper)],
     );
 
@@ -39,12 +42,11 @@ final class DumpTest extends TestCase
     $dumper = self::createStubDumper(['first' => 'hello', 'second' => 'world'], '%%dump-output%%');
 
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {{ dump(first: "hello", second: "world") }}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {{ dump(first: "hello", second: "world") }}
+        world
+        TWIG,
       [new DumpExtension($dumper)],
     );
 
@@ -61,12 +63,11 @@ final class DumpTest extends TestCase
     $dumper = self::createStubDumper(['context' => $context], '%%dump-output%%');
 
     $environment = self::makeEnvironment(
-      <<<TWIG
-      Hello
-      {{ dump() }}
-      world
-      TWIG
-      ,
+      <<<'TWIG'
+        Hello
+        {{ dump() }}
+        world
+        TWIG,
       [new DumpExtension($dumper)],
     );
 
@@ -80,19 +81,18 @@ final class DumpTest extends TestCase
   public function testTemplateDumper(array $arguments, string $syntax, bool $labels): void
   {
     $dumper = new TemplateDumper();
-    ob_start();
+    \ob_start();
     foreach ($arguments as $key => $argument) {
       $dumper->dumpValue($argument, label: $labels ? (string) $key : null);
     }
-    $output = ob_get_clean();
+    $output = \ob_get_clean();
 
     $environment = self::makeEnvironment(
       <<<TWIG
-      Hello
-      {{ dump($syntax) }}
-      world
-      TWIG
-      ,
+        Hello
+        {{ dump({$syntax}) }}
+        world
+        TWIG,
       [new DumpExtension()],
     );
 
@@ -110,7 +110,7 @@ final class DumpTest extends TestCase
 
   private static function genericiseDumpId(string $html): string
   {
-    return \preg_replace(pattern: '~' . \preg_quote('sf-dump-', '~') . '\d+~u', replacement: '$1%ID%', subject: $html);
+    return \preg_replace(pattern: '~' . \preg_quote('sf-dump-', '~') . '\\d+~u', replacement: '$1%ID%', subject: $html);
   }
 
   private static function createStubDumper(

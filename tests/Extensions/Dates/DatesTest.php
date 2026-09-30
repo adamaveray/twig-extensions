@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Dates;
@@ -10,6 +11,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Error\SyntaxError;
 
+/**
+ * @internal
+ */
 #[CoversClass(DatesExtension::class)]
 #[CoversClass(SameDateAsTest::class)]
 final class DatesTest extends TestCase
@@ -175,9 +179,8 @@ final class DatesTest extends TestCase
   {
     $environment = self::makeEnvironment(
       <<<TWIG
-      {{- datetime is $test as(datetime, format: "hello world") -}}
-      TWIG
-      ,
+        {{- datetime is {$test} as(datetime, format: "hello world") -}}
+        TWIG,
       [new DatesExtension()],
     );
 

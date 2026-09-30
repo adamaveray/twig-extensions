@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
 
 use Symfony\Component\String\AbstractString;
-use Symfony\Component\String\AbstractUnicodeString;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+
 use function Symfony\Component\String\u;
 
 final class UrlsExtension extends AbstractExtension
@@ -37,8 +38,10 @@ final class UrlsExtension extends AbstractExtension
 
   private static function filterUrlPart(string $url, string $part, bool $strip_www = false): string|int|null
   {
-    $component =
-      self::URL_PARTS_MAP[$part] ?? throw new \OutOfBoundsException(\sprintf('Unknown URL part "%s".', $part));
+    $component = self::URL_PARTS_MAP[$part] ?? throw new \OutOfBoundsException(\sprintf(
+        'Unknown URL part "%s".',
+        $part,
+      ));
 
     $result = \parse_url($url, $component);
     if ($component === \PHP_URL_HOST && $strip_www) {
@@ -52,6 +55,7 @@ final class UrlsExtension extends AbstractExtension
    *
    * @param string $url A URL to append to.
    * @param array<string, string|int> $values
+   *
    * @return string|\Stringable The URL with the new parameters added.
    */
   private static function filterAppendQueryParams(string $url, array $values, bool $raw = false): string|\Stringable

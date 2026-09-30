@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Nodes\Tests;
@@ -8,6 +9,11 @@ use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ArrayAllOrAnyTest extends TestExpression
 {
   private readonly string $functionName;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Arrays;
@@ -9,6 +10,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Error\RuntimeError;
 
+/**
+ * @internal
+ */
 #[CoversClass(ArraysExtension::class)]
 final class ArrayOthersTest extends TestCase
 {

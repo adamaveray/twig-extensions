@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Bundles;
@@ -9,6 +10,9 @@ use Averay\TwigExtensions\Tests\Resources\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @internal
+ */
 #[CoversClass(AbstractBundle::class)]
 final class AbstractBundleTest extends TestCase
 {
@@ -20,7 +24,7 @@ final class AbstractBundleTest extends TestCase
       self::createStub(ExtensionInterface::class),
     ];
 
-    $bundle = new class ($extensions) extends AbstractBundle {
+    $bundle = new class($extensions) extends AbstractBundle {
       /**
        * @param list<ExtensionInterface> $extensions
        */
@@ -41,7 +45,7 @@ final class AbstractBundleTest extends TestCase
     $innerBundle = $this->createMock(ExtensionBundleInterface::class);
     $innerBundle->expects($this->once())->method('getExtensions')->willReturn($addedExtensions);
 
-    $bundle = new class ($initialExtensions) extends AbstractBundle {
+    $bundle = new class($initialExtensions) extends AbstractBundle {
       /**
        * @param list<ExtensionInterface> $extensions
        */
@@ -59,7 +63,7 @@ final class AbstractBundleTest extends TestCase
     $augmentedBundle = $bundle->withAddedBundle($innerBundle);
 
     self::assertSame(
-      \array_merge($initialExtensions, $addedExtensions),
+      [...$initialExtensions, ...$addedExtensions],
       $augmentedBundle->getExtensions(),
       'The combined extensions should be stored.',
     );

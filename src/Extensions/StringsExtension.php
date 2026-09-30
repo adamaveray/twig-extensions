@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
@@ -10,6 +11,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+
 use function Symfony\Component\String\b;
 use function Symfony\Component\String\s;
 use function Symfony\Component\String\u;
@@ -66,7 +68,7 @@ final class StringsExtension extends AbstractExtension
     $string = u($string);
     return match ($target) {
       'all' => $string->localeLower($locale),
-      'words' => $string->replaceMatches('~\b\w~', static function (array $matches) use ($locale): string {
+      'words' => $string->replaceMatches('~\\b\\w~', static function (array $matches) use ($locale): string {
         /** @var array{ string } $matches */
         return u($matches[0])->localeLower($locale)->toString();
       }),
@@ -89,7 +91,7 @@ final class StringsExtension extends AbstractExtension
     $string = u($string);
     return match ($target) {
       'all' => $string->localeUpper($locale),
-      'words' => $string->replaceMatches('~\b\w~', static function (array $matches) use ($locale): string {
+      'words' => $string->replaceMatches('~\\b\\w~', static function (array $matches) use ($locale): string {
         /** @var array{ string } $matches */ return u($matches[0])->localeUpper($locale)->toString();
       }),
       'first' => $string->slice(0, 1)->localeUpper($locale)->toString() . $string->slice(1)->toString(),
@@ -146,6 +148,7 @@ final class StringsExtension extends AbstractExtension
       if (!\is_string($string)) {
         // @codeCoverageIgnoreStart
         throw new \UnexpectedValueException('Failed stripping indentation.');
+
         // @codeCoverageIgnoreEnd
       }
     }

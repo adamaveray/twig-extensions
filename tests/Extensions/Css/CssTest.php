@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Css;
@@ -12,6 +13,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 
+/**
+ * @internal
+ */
 #[CoversClass(CssExtension::class)]
 final class CssTest extends TestCase
 {
@@ -28,13 +32,11 @@ final class CssTest extends TestCase
     $dq = \htmlentities('"', \ENT_QUOTES);
     yield [
       'expected' => <<<HTML
-      <div style="background:url({$sq}\\{$sq}hello\\{$sq} {$dq}world{$dq}.jpg{$sq})"></div>
-      HTML
-      ,
+        <div style="background:url({$sq}\\{$sq}hello\\{$sq} {$dq}world{$dq}.jpg{$sq})"></div>
+        HTML,
       'template' => <<<'TWIG'
-      <div style="background:url({{ '\'hello\' "world".jpg' | css_string }})"></div>
-      TWIG
-    ,
+        <div style="background:url({{ '\'hello\' "world".jpg' | css_string }})"></div>
+        TWIG,
     ];
   }
 
@@ -48,10 +50,9 @@ final class CssTest extends TestCase
   public static function cssImageSetDataProvider(): iterable
   {
     yield 'Array' => [
-      'expected' => <<<HTML
-      image-set(url('image.jpg') 1x, url('image@2x.jpg') 2x)
-      HTML
-      ,
+      'expected' => <<<'HTML'
+        image-set(url('image.jpg') 1x, url('image@2x.jpg') 2x)
+        HTML,
       'entries' => [
         'image.jpg' => '1x',
         'image@2x.jpg' => '2x',
@@ -82,18 +83,16 @@ final class CssTest extends TestCase
       }
     };
     yield 'Densities without format' => [
-      'expected' => <<<HTML
-      image-set(url('image.webp') type('image/webp') 1x, url('image@2x.webp') type('image/webp') 2x, url('image.jpg') type('image/jpeg') 1x, url('image@2x.jpg') type('image/jpeg') 2x)
-      HTML
-      ,
+      'expected' => <<<'HTML'
+        image-set(url('image.webp') type('image/webp') 1x, url('image@2x.webp') type('image/webp') 2x, url('image.jpg') type('image/jpeg') 1x, url('image@2x.jpg') type('image/jpeg') 2x)
+        HTML,
       'entries' => $object,
     ];
 
     yield 'Densities with format' => [
-      'expected' => <<<HTML
-      image-set(url('image.jpg') 1x, url('image@2x.jpg') 2x)
-      HTML
-      ,
+      'expected' => <<<'HTML'
+        image-set(url('image.jpg') 1x, url('image@2x.jpg') 2x)
+        HTML,
       'entries' => $object,
       'format' => 'image/jpeg',
     ];
