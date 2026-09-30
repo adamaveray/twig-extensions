@@ -39,6 +39,7 @@
     "symfony/twig-bridge": "^8.1",
     "symfony/var-dumper": "^8.1",
     "twig/cache-extra": "^3.28",
+    "twig/html-extra": "^3.29",
     "twig/intl-extra": "^3.30",
     "twig/twig": "^v3.30"
   },

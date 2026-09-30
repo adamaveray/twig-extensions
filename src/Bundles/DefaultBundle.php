@@ -11,6 +11,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extra\Cache\CacheExtension;
+use Twig\Extra\Html\HtmlExtension as HtmlExtraExtension;
 use Twig\Profiler\Profile;
 
 final class DefaultBundle extends AbstractBundle
@@ -21,6 +22,7 @@ final class DefaultBundle extends AbstractBundle
     $this->extensions = [
       // Twig-provided
       new CacheExtension(),
+      new HtmlExtraExtension(),
 
       // Twig overrides
       new Extensions\TwigOverridesExtension(),
