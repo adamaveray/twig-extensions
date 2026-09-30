@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -203,6 +204,76 @@ final class TwigEnvironmentTest extends TestCase
     // @mago-expect analysis:possibly-invalid-argument
     $loadedService = $environment->getRuntime($testServiceName);
     self::assertSame($testService, $loadedService, 'The container service should be loaded.');
+  }
+
+  #[Test]
+  public function addContainerLoaderMethodExcludesRuntimes(): void
+  {
+    $environment = self::makeCustomEnvironment();
+    $environment->addContainerLoader(self::makeRuntimeContainerHavingEverything(), [\ArrayObject::class]);
+
+    self::assertRuntimesExcluded($environment);
+  }
+
+  #[Test]
+  public function containerExcludedRuntimesConstructorOption(): void
+  {
+    $environment = new TwigEnvironment(new ArrayLoader([]), [
+      'container' => self::makeRuntimeContainerHavingEverything(),
+      'container_excluded_runtimes' => [\ArrayObject::class],
+    ]);
+
+    self::assertRuntimesExcluded($environment);
+  }
+
+  #[Test]
+  public function containerExcludedRuntimesConstructorOptionRequiresContainer(): void
+  {
+    self::assertThrows(
+      static function (): void {
+        new TwigEnvironment(new ArrayLoader([]), ['container_excluded_runtimes' => [\ArrayObject::class]]);
+      },
+      test: static fn(\Throwable $exception): bool => (
+        $exception instanceof \InvalidArgumentException
+        && $exception->getMessage() === 'The "container_excluded_runtimes" option requires the "container" option.'
+      ),
+      message: 'Excluding runtimes without a container should be rejected.',
+    );
+  }
+
+  /**
+   * Creates a container able to provide every runtime.
+   */
+  private static function makeRuntimeContainerHavingEverything(): ContainerInterface
+  {
+    $container = self::createStub(ContainerInterface::class);
+    $container->method('has')->willReturn(true);
+    $container
+      ->method('get')
+      ->willReturnCallback(static fn(string $id): object => match ($id) {
+        \stdClass::class => new \stdClass(),
+        default => throw new \LogicException(\sprintf('The container should not be asked for "%s".', $id)),
+      });
+    return $container;
+  }
+
+  private static function assertRuntimesExcluded(TwigEnvironment $environment): void
+  {
+    self::assertInstanceOf(
+      \stdClass::class,
+      $environment->getRuntime(\stdClass::class),
+      'A runtime that is not excluded should be loaded from the container.',
+    );
+    self::assertThrows(
+      static function () use ($environment): void {
+        $environment->getRuntime(\ArrayObject::class);
+      },
+      test: static fn(\Throwable $exception): bool => (
+        $exception instanceof RuntimeError
+        && $exception->getMessage() === \sprintf('Unable to load the "%s" runtime.', \ArrayObject::class)
+      ),
+      message: 'An excluded runtime should not be loaded from the container.',
+    );
   }
 
   private static function makeCustomEnvironment(): TwigEnvironment

@@ -6,3 +6,6 @@ paths = ["."]
 
 [formatter]
 sort-class-methods = false
+
+[linter.rules]
+no-redundant-file = { exclude = ["tests/Components/Fixtures/Basic"] }
