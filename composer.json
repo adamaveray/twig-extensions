@@ -49,6 +49,14 @@
     "friendsofphp/php-cs-fixer": "^3.95",
     "phpunit/phpunit": "^13.3",
     "roave/security-advisories": "dev-latest",
-    "symfony/http-foundation": "^8.1"
+    "symfony/cache": "^8.1",
+    "symfony/finder": "^8.1",
+    "symfony/http-foundation": "^8.1",
+    "symfony/ux-twig-component": "~3.5"
+  },
+  "suggest": {
+    "symfony/cache": "Required to use Twig Components (^8.1).",
+    "symfony/finder": "Required to use Twig Components (^8.1).",
+    "symfony/ux-twig-component": "Required to use Twig Components (~3.5)."
   }
 }
