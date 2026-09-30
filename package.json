@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "format": "vp exec codeformat fix",
-    "lint": "vp exec codeformat check",
+    "lint": "vp run lint:codeformat && vp run lint:composer",
+    "lint:codeformat": "vp exec codeformat check",
+    "lint:composer": "composer validate --strict",
     "test": "php ./vendor/bin/phpunit"
   },
   "devDependencies": {
