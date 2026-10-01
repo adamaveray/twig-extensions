@@ -130,6 +130,18 @@ final class ComponentDiscovererTest extends TestCase
       '@framework/components/Button.html.twig',
       ['@framework/components/Button.html.twig'],
     ];
+    yield 'Index template' => [
+      '@views/components/Button/index.html.twig',
+      ['@views/components/Button/index.html.twig'],
+    ];
+    yield 'Named template before index template' => [
+      '@views/components/Button.html.twig',
+      ['@views/components/Button.html.twig', '@views/components/Button/index.html.twig'],
+    ];
+    yield 'Index template in earlier directory' => [
+      '@views/components/Button/index.html.twig',
+      ['@views/components/Button/index.html.twig', '@framework/components/Button.html.twig'],
+    ];
   }
 
   #[Test]

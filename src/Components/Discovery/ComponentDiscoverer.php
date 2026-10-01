@@ -19,7 +19,8 @@ use Twig\Loader\LoaderInterface;
  */
 final readonly class ComponentDiscoverer
 {
-  private const string TEMPLATE_EXTENSION = 'html.twig'; // Matching non-configurable Symfony UX value
+  /** @var non-empty-list<string> */
+  private const array TEMPLATE_PATH_SUFFIXES = ['.html.twig', '/index.html.twig']; // Matching non-configurable Symfony UX value
 
   public function __construct(
     private LoaderInterface $loader,
@@ -169,11 +170,15 @@ final readonly class ComponentDiscoverer
    */
   private static function getTemplatePaths(string $componentName, array $templateDirectories): array
   {
-    $componentPath = \str_replace(':', '/', $componentName) . '.' . self::TEMPLATE_EXTENSION;
-    return \array_map(
-      static fn(string $directory): string => \rtrim($directory, '/') . '/' . $componentPath,
-      $templateDirectories,
-    );
+    $componentPath = \str_replace(':', '/', $componentName);
+    $paths = [];
+    foreach ($templateDirectories as $directory) {
+      $directory = \rtrim($directory, '/');
+      foreach (self::TEMPLATE_PATH_SUFFIXES as $suffix) {
+        $paths[] = $directory . '/' . $componentPath . $suffix;
+      }
+    }
+    return $paths;
   }
 
   /**
