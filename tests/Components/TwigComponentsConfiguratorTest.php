@@ -101,6 +101,28 @@ final class TwigComponentsConfiguratorTest extends TestCase
   }
 
   /**
+   * @param array<string, string> $templates
+   */
+  #[Test]
+  #[DataProvider('anonymousTemplateDirectoryPrecedenceDataProvider')]
+  public function createsTemplateFinderWithDirectoryPrecedence(string $expected, array $templates): void
+  {
+    $configurator = self::makeConfigurator(anonymousTemplateDirectory: [
+      '@views/components',
+      '@framework/components',
+    ]);
+    $templateFinder = $configurator->createTemplateFinder(new Environment(new ArrayLoader($templates)));
+    $template = $templateFinder->findAnonymousComponentTemplate('Badge');
+
+    self::assertNotNull($template, 'A template should be found.');
+    self::assertSame(
+      $expected,
+      $templates[$template] ?? null,
+      'The template in the earliest directory should be found.',
+    );
+  }
+
+  /**
    * @return iterable<string, array{ string, array<string, string> }>
    */
   public static function anonymousTemplateDirectoryPrecedenceDataProvider(): iterable

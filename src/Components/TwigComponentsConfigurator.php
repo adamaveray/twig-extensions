@@ -24,6 +24,7 @@ use Symfony\UX\TwigComponent\ComponentProperties;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
+use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
@@ -114,21 +115,20 @@ final readonly class TwigComponentsConfigurator
     new ComponentProperties($this->propertyAccessor, \array_fill_keys($classNames, null), $this->cache)->warmup();
   }
 
-  private function createRuntime(Environment $twig): ComponentRuntime
+  public function createTemplateFinder(Environment $twig): ComponentTemplateFinderInterface
   {
     $loader = $twig->getLoader();
-
-    $stack = new ComponentStack();
-
-    $registry = $this->loadRegistry($loader);
-
-    $templateFinder = new ChainedTemplateFinder(\array_map(
+    return new ChainedTemplateFinder(\array_map(
       static fn(string $directory): ComponentTemplateFinder => new ComponentTemplateFinder($loader, $directory),
       $this->anonymousTemplateDirectories,
     ));
+  }
 
-    $factory = new ComponentFactory(
-      $templateFinder,
+  public function createComponentFactory(Environment $twig): ComponentFactory
+  {
+    $registry = $this->loadRegistry($twig->getLoader());
+    return new ComponentFactory(
+      $this->createTemplateFinder($twig),
       new ComponentLocator($this->componentContainer, $registry->getClassNames()),
       $this->propertyAccessor,
       $this->eventDispatcher,
@@ -136,16 +136,25 @@ final readonly class TwigComponentsConfigurator
       $registry->getClassMap(),
       $twig,
     );
+  }
 
-    $renderer = new ComponentRenderer(
+  public function createComponentRenderer(
+    Environment $twig,
+    ComponentStack $stack = new ComponentStack(),
+  ): ComponentRenderer {
+    return new ComponentRenderer(
       $twig,
       $this->eventDispatcher,
-      $factory,
+      $this->createComponentFactory($twig),
       new ComponentProperties($this->propertyAccessor, cache: $this->cache),
       $stack,
     );
+  }
 
-    return new ComponentRuntime($renderer, new NullRendererLocator(), $stack);
+  private function createRuntime(Environment $twig): ComponentRuntime
+  {
+    $stack = new ComponentStack();
+    return new ComponentRuntime($this->createComponentRenderer($twig, $stack), new NullRendererLocator(), $stack);
   }
 
   private function loadRegistry(LoaderInterface $loader): ComponentRegistry
