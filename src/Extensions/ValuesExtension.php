@@ -22,20 +22,24 @@ final class ValuesExtension extends AbstractExtension
   public function getTests(): array
   {
     return [
-      new TwigTest('instance of', null, ['node_class' => InstanceOfTest::class, 'one_mandatory_argument' => true]),
+      new TwigTest('instance of', null, [
+        'node_class' => InstanceOfTest::class,
+        'one_mandatory_argument' => true,
+        'always_allowed_in_sandbox' => true,
+      ]),
 
       // Primitive types
-      new TwigTest('array', \is_array(...)),
-      new TwigTest('bool', \is_bool(...)),
+      new TwigTest('array', \is_array(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('bool', \is_bool(...), ['always_allowed_in_sandbox' => true]),
       new TwigTest('callable', \is_callable(...)),
-      new TwigTest('countable', \is_countable(...)),
-      new TwigTest('float', \is_float(...)),
-      new TwigTest('int', \is_int(...)),
-      new TwigTest('numeric', \is_numeric(...)),
-      new TwigTest('object', \is_object(...)),
-      new TwigTest('resource', \is_resource(...)),
-      new TwigTest('scalar', \is_scalar(...)),
-      new TwigTest('string', \is_string(...)),
+      new TwigTest('countable', \is_countable(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('float', \is_float(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('int', \is_int(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('numeric', \is_numeric(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('object', \is_object(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('resource', \is_resource(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('scalar', \is_scalar(...), ['always_allowed_in_sandbox' => true]),
+      new TwigTest('string', \is_string(...), ['always_allowed_in_sandbox' => true]),
     ];
   }
 }

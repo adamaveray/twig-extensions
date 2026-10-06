@@ -29,8 +29,8 @@ final class ArraysExtension extends AbstractExtension
   public function getTests(): array
   {
     return [
-      new TwigTest('all_empty', null, ['node_class' => ArrayAllOrAnyTest::class]),
-      new TwigTest('any_empty', null, ['node_class' => ArrayAllOrAnyTest::class]),
+      new TwigTest('all_empty', null, ['node_class' => ArrayAllOrAnyTest::class, 'always_allowed_in_sandbox' => true]),
+      new TwigTest('any_empty', null, ['node_class' => ArrayAllOrAnyTest::class, 'always_allowed_in_sandbox' => true]),
     ];
   }
 

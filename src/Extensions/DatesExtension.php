@@ -17,6 +17,7 @@ final class DatesExtension extends AbstractExtension
       static fn(string $name): TwigTest => new TwigTest($name, null, [
         'node_class' => SameDateAsTest::class,
         'one_mandatory_argument' => true,
+        'always_allowed_in_sandbox' => true,
       ]),
       ['same_date as', 'same_year as', 'same_month as', 'same_day as', 'same_time as'],
     );
