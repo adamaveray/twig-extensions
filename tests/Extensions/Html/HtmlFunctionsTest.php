@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Tests\Extensions\Html;
 
+use Averay\HtmlBuilder\Html\Attributes\AttributesConfig;
 use Averay\HtmlBuilder\Html\HtmlBuilder;
 use Averay\TwigExtensions\Extensions\HtmlExtension;
 use Averay\TwigExtensions\Tests\Resources\TestCase;
@@ -229,6 +230,92 @@ final class HtmlFunctionsTest extends TestCase
       test: static fn(\Throwable $exception): bool => $exception instanceof RuntimeError,
       message: 'Invalid attribute names should be rejected rather than escaped.',
     );
+  }
+
+  /**
+   * @param list<string>|null $constructorTokenLists
+   * @param list<string>|null $runtimeTokenLists
+   */
+  #[Test]
+  #[DataProvider('attributesConfigDataProvider')]
+  public function attributesConfig(string $expected, ?array $constructorTokenLists, ?array $runtimeTokenLists): void
+  {
+    $extension = new HtmlExtension(
+      $constructorTokenLists === null ? null : new AttributesConfig(tokenListAttributeNames: $constructorTokenLists),
+    );
+
+    /** @var array<class-string, object> $runtimeResources */
+    $runtimeResources = [];
+    if ($runtimeTokenLists !== null) {
+      $runtimeResources[AttributesConfig::class] = new AttributesConfig(tokenListAttributeNames: $runtimeTokenLists);
+    }
+
+    $environment = self::makeEnvironment(
+      '{{- attributes({ class: "extra" }).defaults({ class: "base" }) -}}',
+      extensions: [$extension],
+      runtimeResources: $runtimeResources,
+    );
+
+    self::assertRenders($expected, $environment);
+  }
+
+  /**
+   * @return iterable<string, array{
+   *   expected: string,
+   *   constructorTokenLists: list<string>|null,
+   *   runtimeTokenLists: list<string>|null,
+   * }>
+   */
+  public static function attributesConfigDataProvider(): iterable
+  {
+    yield 'Default' => [
+      'expected' => ' class="base extra"',
+      'constructorTokenLists' => null,
+      'runtimeTokenLists' => null,
+    ];
+    yield 'Constructor' => [
+      'expected' => ' class="extra"',
+      'constructorTokenLists' => [],
+      'runtimeTokenLists' => null,
+    ];
+    yield 'Runtime' => [
+      'expected' => ' class="extra"',
+      'constructorTokenLists' => null,
+      'runtimeTokenLists' => [],
+    ];
+    yield 'Runtime overrides constructor' => [
+      'expected' => ' class="extra"',
+      'constructorTokenLists' => ['class'],
+      'runtimeTokenLists' => [],
+    ];
+  }
+
+  #[Test]
+  public function attributesConfigPerEnvironment(): void
+  {
+    $extension = new HtmlExtension();
+    $template = '{{- attributes({ class: "extra" }).defaults({ class: "base" }) -}}';
+
+    $configuredEnvironment = self::makeEnvironment(
+      $template,
+      extensions: [$extension],
+      runtimeResources: [AttributesConfig::class => new AttributesConfig(tokenListAttributeNames: [])],
+    );
+    $defaultEnvironment = self::makeEnvironment($template, [$extension]);
+
+    // Render both twice to ensure configs are not shared between environments
+    foreach ([1, 2] as $i) {
+      self::assertRenders(
+        ' class="extra"',
+        $configuredEnvironment,
+        message: \sprintf('The runtime config should be used on render %d.', $i),
+      );
+      self::assertRenders(
+        ' class="base extra"',
+        $defaultEnvironment,
+        message: \sprintf('The default config should be used on render %d.', $i),
+      );
+    }
   }
 
   #[Test]
