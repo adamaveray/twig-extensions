@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Averay\TwigExtensions\Extensions;
 
+use Averay\HtmlBuilder\Html\Attributes\AttributesConfig;
+use Averay\HtmlBuilder\Html\Attributes\HtmlAttributes;
 use Averay\HtmlBuilder\Html\HtmlBuilder;
 use Averay\TwigExtensions\Extensions\Traits\WithRequest;
 use Averay\TwigExtensions\Extensions\Traits\WithSymfonyApp;
 use Psr\Http\Message\UriInterface;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -24,6 +28,18 @@ final class HtmlExtension extends AbstractExtension
 {
   use WithRequest;
   use WithSymfonyApp;
+
+  /** @var \WeakMap<Environment, AttributesConfig> Configs for each environment. */
+  private readonly \WeakMap $attributeConfigs;
+  /** @var \WeakMap<EscaperRuntime, true> Escapers already configured to output attribute sets without escaping. */
+  private readonly \WeakMap $configuredEscapers;
+
+  public function __construct(
+    private readonly ?AttributesConfig $defaultAttributesConfig = null,
+  ) {
+    $this->attributeConfigs = new \WeakMap();
+    $this->configuredEscapers = new \WeakMap();
+  }
 
   #[\Override]
   public function getFilters(): array
@@ -58,9 +74,8 @@ final class HtmlExtension extends AbstractExtension
   public function getFunctions(): array
   {
     return [
-      new TwigFunction('attrs', self::buildAttrs(...), [
+      new TwigFunction('attributes', $this->buildAttributes(...), [
         'needs_environment' => true,
-        'is_safe' => ['html'],
       ]),
       new TwigFunction('classes', self::buildClasses(...), [
         'needs_environment' => true,
@@ -89,14 +104,38 @@ final class HtmlExtension extends AbstractExtension
   }
 
   /**
-   * @param array<array-key, \Stringable|scalar|null> ...$attrs
-   *
-   * @see HtmlBuilder::buildAttrs
+   * @param iterable<string, mixed>|string|false|null ...$sets
    */
-  private static function buildAttrs(Environment $environment, array ...$attrs): string
+  private function buildAttributes(Environment $environment, iterable|string|false|null ...$sets): HtmlAttributes
   {
-    $htmlBuilder = $environment->getRuntime(HtmlBuilder::class);
-    return $htmlBuilder->buildAttrs(...$attrs);
+    $escaper = $environment->getRuntime(EscaperRuntime::class);
+    if (!isset($this->configuredEscapers[$escaper])) {
+      // Register attributes as safe for HTML (must only be done once per escaper instance)
+      $escaper->addSafeClass(HtmlAttributes::class, ['html']);
+      $this->configuredEscapers[$escaper] = true;
+    }
+
+    try {
+      return HtmlAttributes::createFromSets(\array_values($sets), config: $this->getAttributesConfig($environment));
+    } catch (\InvalidArgumentException $exception) {
+      throw new RuntimeError($exception->getMessage(), previous: $exception);
+    }
+  }
+
+  private function getAttributesConfig(Environment $environment): AttributesConfig
+  {
+    $config = $this->attributeConfigs[$environment] ?? null;
+    if ($config === null) {
+      try {
+        $config = $environment->getRuntime(AttributesConfig::class);
+      } catch (RuntimeError) {
+        $config = $this->defaultAttributesConfig ?? AttributesConfig::createDefault();
+      }
+
+      $this->attributeConfigs[$environment] = $config;
+    }
+
+    return $config;
   }
 
   /**
@@ -165,7 +204,6 @@ final class HtmlExtension extends AbstractExtension
     array $preconnect_hosts = [],
   ): string {
     $htmlBuilder = $environment->getRuntime(HtmlBuilder::class);
-    // @mago-expect analysis:possibly-invalid-argument -- Requires dependency update.
     return $htmlBuilder->buildPreloadLinks($preloads, $preconnect_hosts);
   }
 
