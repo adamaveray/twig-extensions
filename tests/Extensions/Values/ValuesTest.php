@@ -100,4 +100,51 @@ final class ValuesTest extends TestCase
       'className' => \DateTimeInterface::class,
     ];
   }
+
+  #[Test]
+  #[DataProvider('typeTestDataProvider')]
+  public function typeTest(bool $expected, string $test, mixed $value): void
+  {
+    $environment = self::makeEnvironment('{{- value is ' . $test . ' ? "yes" : "no" -}}', [new ValuesExtension()]);
+    self::assertRenders($expected ? 'yes' : 'no', $environment, context: ['value' => $value]);
+  }
+
+  /**
+   * @return iterable<string, array{ expected: bool, test: string, value: mixed }>
+   */
+  public static function typeTestDataProvider(): iterable
+  {
+    yield 'Array match' => ['expected' => true, 'test' => 'array', 'value' => ['a', 'b']];
+    yield 'Array no match' => ['expected' => false, 'test' => 'array', 'value' => new \ArrayObject()];
+
+    yield 'Bool match' => ['expected' => true, 'test' => 'bool', 'value' => false];
+    yield 'Bool no match' => ['expected' => false, 'test' => 'bool', 'value' => 0];
+
+    yield 'Callable match' => ['expected' => true, 'test' => 'callable', 'value' => static fn(): null => null];
+    yield 'Callable no match' => ['expected' => false, 'test' => 'callable', 'value' => 'not a function'];
+
+    yield 'Countable match' => ['expected' => true, 'test' => 'countable', 'value' => new \ArrayObject()];
+    yield 'Countable no match' => ['expected' => false, 'test' => 'countable', 'value' => new \stdClass()];
+
+    yield 'Float match' => ['expected' => true, 'test' => 'float', 'value' => 1.5];
+    yield 'Float no match' => ['expected' => false, 'test' => 'float', 'value' => 1];
+
+    yield 'Int match' => ['expected' => true, 'test' => 'int', 'value' => 1];
+    yield 'Int no match' => ['expected' => false, 'test' => 'int', 'value' => '1'];
+
+    yield 'Numeric match' => ['expected' => true, 'test' => 'numeric', 'value' => '1.5'];
+    yield 'Numeric no match' => ['expected' => false, 'test' => 'numeric', 'value' => 'abc'];
+
+    yield 'Object match' => ['expected' => true, 'test' => 'object', 'value' => new \stdClass()];
+    yield 'Object no match' => ['expected' => false, 'test' => 'object', 'value' => ['a' => 1]];
+
+    yield 'Resource match' => ['expected' => true, 'test' => 'resource', 'value' => \fopen('php://memory', 'rb')];
+    yield 'Resource no match' => ['expected' => false, 'test' => 'resource', 'value' => 'php://memory'];
+
+    yield 'Scalar match' => ['expected' => true, 'test' => 'scalar', 'value' => 'abc'];
+    yield 'Scalar no match' => ['expected' => false, 'test' => 'scalar', 'value' => null];
+
+    yield 'String match' => ['expected' => true, 'test' => 'string', 'value' => 'abc'];
+    yield 'String no match' => ['expected' => false, 'test' => 'string', 'value' => 1];
+  }
 }
